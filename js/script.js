@@ -8,19 +8,23 @@ d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
     });
 
     // Group data by year and calculate average temperature
-    var dataByYear = d3.nest()
-        .key(function(d) { return d.dt.getFullYear(); }) // Group by year
-        .rollup(function(v) {
-            return d3.mean(v, function(d) { return d.AverageTemperature; }); // Calculate average temperature
-        })
-        .entries(data);
+    var dataByYear = {};
+    data.forEach(function(d) {
+        var year = d.dt.getFullYear();
+        if (!dataByYear[year]) {
+            dataByYear[year] = [];
+        }
+        dataByYear[year].push(d);
+    });
 
-    // Convert dataByYear format to match original data structure
-    var averagedData = dataByYear.map(function(d) {
-        return {
-            dt: new Date(d.key, 0, 1), // Create a Date object for January 1st of each year
-            AverageTemperature: d.value // Average temperature for the year
-        };
+    var averagedData = [];
+    Object.keys(dataByYear).forEach(function(year) {
+        var temperatures = dataByYear[year].map(function(d) { return d.AverageTemperature; });
+        var averageTemperature = d3.mean(temperatures);
+        averagedData.push({
+            dt: new Date(year, 0, 1), // January 1st of each year
+            AverageTemperature: averageTemperature
+        });
     });
 
     console.log(averagedData); // Check the averaged data in console
@@ -43,7 +47,7 @@ d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
         .range([0, width]);
 
     var y = d3.scaleLinear()
-        .domain(d3.extent(averagedData, function(d) { return d.AverageTemperature; })) // Set domain to averagedData
+        .domain(d3.extent(averagedData, function(d) { return d.AverageTemperature; }))
         .nice()
         .range([height, 0]);
 
