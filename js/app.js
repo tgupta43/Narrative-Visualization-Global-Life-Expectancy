@@ -1,36 +1,57 @@
-// D3.js code for Scene 1: Global Temperature Rise
-// Define SVG dimensions, scales, axes, and annotations
+// Load the data
+d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
+    // Parse dates
+    var parseDate = d3.timeParse('%Y-%m-%d');
+    data.forEach(function(d) {
+        d.dt = parseDate(d.dt); // Parse date string to Date object
+        d.AverageTemperature = +d.AverageTemperature; // Convert temperature to numeric
+    });
 
-const svg1 = d3.select("#visualization1")
-    .append("svg")
-    .attr("width", 800)
-    .attr("height", 400);
+    // Set up the D3.js chart
+    var margin = { top: 20, right: 30, bottom: 30, left: 60 },
+        width = 800 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
 
-// Example data and scales
-const data1 = [{ year: 1900, temperature: 0.5 }, /* more data */ ];
-const xScale1 = d3.scaleTime().domain([new Date(1900, 0, 1), new Date(2020, 0, 1)]).range([0, 800]);
-const yScale1 = d3.scaleLinear().domain([-1, 1]).range([400, 0]);
+    var svg = d3.select('#chart')
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-// Add axes
-svg1.append("g").attr("transform", "translate(0,400)").call(d3.axisBottom(xScale1));
-svg1.append("g").call(d3.axisLeft(yScale1));
+    // Define scales
+    var x = d3.scaleTime()
+        .domain(d3.extent(data, function(d) { return d.dt; }))
+        .range([0, width]);
 
-// Add line
-const line1 = d3.line()
-    .x(d => xScale1(new Date(d.year, 0, 1)))
-    .y(d => yScale1(d.temperature));
+    var y = d3.scaleLinear()
+        .domain(d3.extent(data, function(d) { return d.AverageTemperature; }))
+        .nice()
+        .range([height, 0]);
 
-svg1.append("path")
-    .datum(data1)
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
-    .attr("d", line1);
+    // Define axes
+    var xAxis = d3.axisBottom(x);
 
-// D3.js code for Scene 2: CO2 Emissions
-// Define SVG dimensions, scales, axes, and annotations
-// Repeat similar steps for visualization2
+    var yAxis = d3.axisLeft(y);
 
-// D3.js code for Scene 3: Sea Level Rise
-// Define SVG dimensions, scales, axes, and annotations
-// Repeat similar steps for visualization3
+    // Draw X axis
+    svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis);
+
+    // Draw Y axis
+    svg.append('g')
+        .attr('class', 'y axis')
+        .call(yAxis);
+
+    // Draw line chart
+    var line = d3.line()
+        .x(function(d) { return x(d.dt); })
+        .y(function(d) { return y(d.AverageTemperature); });
+
+    svg.append('path')
+        .datum(data)
+        .attr('class', 'line')
+        .attr('d', line);
+});
