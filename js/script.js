@@ -43,7 +43,7 @@ d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
         .range([0, width]);
 
     var y = d3.scaleLinear()
-        .domain(d3.extent(averagedData, function(d) { return d.AverageTemperature; }))
+        .domain(d3.extent(averagedData, function(d) { return d.AverageTemperature; })) // Set domain to averagedData
         .nice()
         .range([height, 0]);
 
