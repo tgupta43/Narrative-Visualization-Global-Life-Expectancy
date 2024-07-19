@@ -3,7 +3,7 @@ d3.csv('data/seaLevel.csv').then(function(data) {
     // Parse dates and convert sea level to number
     var parseDate = d3.timeParse('%Y-%m-%d');
     data.forEach(function(d) {
-        d.Time = parseDate(d.Time); // Parse date string to Date object
+        d.Year = parseDate(d.Year); // Parse date string to Date object
         d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
     });
 
@@ -21,7 +21,7 @@ d3.csv('data/seaLevel.csv').then(function(data) {
 
     // Define scales
     var x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.Time; }))
+        .domain(d3.extent(data, function(d) { return d.Year; }))
         .range([0, width]);
 
     var y = d3.scaleLinear()
@@ -46,7 +46,7 @@ d3.csv('data/seaLevel.csv').then(function(data) {
 
     // Draw line chart
     var line = d3.line()
-        .x(function(d) { return x(d.Time); })
+        .x(function(d) { return x(d.Year); })
         .y(function(d) { return y(d.SeaLevel); });
 
     svg.append('path')
