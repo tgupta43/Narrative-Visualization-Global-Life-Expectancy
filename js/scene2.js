@@ -5,17 +5,16 @@ d3.csv('data/seaLevel.csv').then(function(data) {
     data.forEach(function(d) {
         d.Time = parseDate(d.Time); // Parse date string to Date object
         d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
-        if (isNaN(d.SeaLevel)) {
-            console.log('Invalid SeaLevel value:', d.SeaLevel, 'for time', d.Time);
-        }
-        if (isNaN(d.Time)) {
-            console.log('Invalid Time value:', d.Time);
-        }
     });
 
-    console.log('Parsed data:', data); // Check the parsed data
+    // Filter out invalid data points
+    var filteredData = data.filter(function(d) {
+        return !isNaN(d.Time) && !isNaN(d.SeaLevel);
+    });
 
-    // Proceed with drawing the chart
+    console.log('Filtered data:', filteredData); // Check the filtered data
+
+    // Proceed with drawing the chart using filteredData
     var margin = { top: 20, right: 30, bottom: 30, left: 60 },
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
@@ -29,11 +28,11 @@ d3.csv('data/seaLevel.csv').then(function(data) {
 
     // Define scales
     var x = d3.scaleTime()
-        .domain(d3.extent(data, function(d) { return d.Time; }))
+        .domain(d3.extent(filteredData, function(d) { return d.Time; }))
         .range([0, width]);
 
     var y = d3.scaleLinear()
-        .domain(d3.extent(data, function(d) { return d.SeaLevel; }))
+        .domain(d3.extent(filteredData, function(d) { return d.SeaLevel; }))
         .nice()
         .range([height, 0]);
 
@@ -58,7 +57,7 @@ d3.csv('data/seaLevel.csv').then(function(data) {
         .y(function(d) { return y(d.SeaLevel); });
 
     svg.append('path')
-        .datum(data)
+        .datum(filteredData)
         .attr('class', 'line')
         .attr('d', line)
         .attr('fill', 'none')
