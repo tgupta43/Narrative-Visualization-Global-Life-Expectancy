@@ -4,7 +4,7 @@ d3.csv('data/seaLevel.csv').then(function(data) {
     console.log('Raw data:', data);
 
     // Parse dates and convert sea level to number
-    var parseDate = d3.timeParse('%Y-%m-%d');
+    var parseDate = d3.timeParse('%Y'); // Adjust this format as needed
     data.forEach(function(d) {
         d.Time = parseDate(d.Time); // Parse date string to Date object
         d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
