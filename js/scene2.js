@@ -8,18 +8,26 @@ d3.csv('data/seaLevel.csv').then(function(data) {
     data.forEach(function(d) {
         d.Time = parseDate(d.Time); // Parse date string to Date object
         d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
+        console.log('Parsed row:', d.Time, d.SeaLevel);
     });
-
-    // Log the parsed data
-    console.log('Parsed data:', data);
 
     // Filter out invalid data points
     var filteredData = data.filter(function(d) {
-        return d.Time instanceof Date && !isNaN(d.Time) && !isNaN(d.SeaLevel);
+        var isValid = d.Time instanceof Date && !isNaN(d.SeaLevel);
+        if (!isValid) {
+            console.log('Invalid row:', d);
+        }
+        return isValid;
     });
 
     // Log the filtered data
     console.log('Filtered data:', filteredData);
+
+    // If filteredData is empty, log an error message
+    if (filteredData.length === 0) {
+        console.error('Filtered data is empty. Please check the data format and parsing logic.');
+        return;
+    }
 
     // Proceed with drawing the chart using filteredData
     var margin = { top: 20, right: 30, bottom: 30, left: 60 },
