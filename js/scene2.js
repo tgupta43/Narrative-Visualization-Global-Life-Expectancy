@@ -1,5 +1,8 @@
 // Load the sea level data
 d3.csv('data/seaLevel.csv').then(function(data) {
+    // Log the raw data
+    console.log('Raw data:', data);
+
     // Parse dates and convert sea level to number
     var parseDate = d3.timeParse('%Y-%m-%d');
     data.forEach(function(d) {
@@ -7,12 +10,16 @@ d3.csv('data/seaLevel.csv').then(function(data) {
         d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
     });
 
+    // Log the parsed data
+    console.log('Parsed data:', data);
+
     // Filter out invalid data points
     var filteredData = data.filter(function(d) {
-        return !isNaN(d.Time) && !isNaN(d.SeaLevel);
+        return d.Time instanceof Date && !isNaN(d.Time) && !isNaN(d.SeaLevel);
     });
 
-    console.log('Filtered data:', filteredData); // Check the filtered data
+    // Log the filtered data
+    console.log('Filtered data:', filteredData);
 
     // Proceed with drawing the chart using filteredData
     var margin = { top: 20, right: 30, bottom: 30, left: 60 },
