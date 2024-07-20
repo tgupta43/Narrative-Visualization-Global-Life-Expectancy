@@ -81,3 +81,8 @@ d3.csv('data/co2_emission.csv').then(function(data) {
 }).catch(function(error) {
     console.log('Error loading CO2 emissions data:', error);
 });
+
+// Handle button click to navigate to Scene 3
+document.getElementById('scene3-button').addEventListener('click', function() {
+    window.location.href = 'scene3.html'; // Navigate to Scene 3
+});
