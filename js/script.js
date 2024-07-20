@@ -47,8 +47,7 @@ d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
         .range([0, width]);
 
     var y = d3.scaleLinear()
-        .domain(d3.extent(averagedData, function(d) { return d.AverageTemperature; }))
-        .nice()
+        .domain([d3.min(averagedData, function(d) { return d.AverageTemperature; }) - 1, d3.max(averagedData, function(d) { return d.AverageTemperature; }) + 1])
         .range([height, 0]);
 
     // Define axes
@@ -74,7 +73,10 @@ d3.csv('data/GlobalLandTemperaturesByCountry.csv').then(function(data) {
     svg.append('path')
         .datum(averagedData)
         .attr('class', 'line')
-        .attr('d', line);
+        .attr('d', line)
+        .style('fill', 'none')
+        .style('stroke', 'steelblue')
+        .style('stroke-width', 2);
 }).catch(function(error) {
     console.log('Error loading data:', error);
 });
