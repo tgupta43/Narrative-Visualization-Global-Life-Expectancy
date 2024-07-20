@@ -1,19 +1,19 @@
-// Load the CO2 emissions data
-d3.csv('data/co2_emission.csv').then(function(data) {
+// Load the sea level data
+d3.csv('data/seaLevel.csv').then(function(data) {
     // Log the raw data
     console.log('Raw data:', data);
 
-    // Parse dates and convert CO2 emissions to number
+    // Parse dates and convert sea level to number
     var parseDate = d3.timeParse('%Y'); // Adjust this format as needed
     data.forEach(function(d) {
-        d.Year = parseDate(d.Year); // Parse date string to Date object
-        d.CO2Emissions = +d.CO2Emissions; // Convert CO2 emissions to numeric
-        console.log('Parsed row:', d.Year, d.CO2Emissions);
+        d.Time = parseDate(d.Time); // Parse date string to Date object
+        d.SeaLevel = +d.SeaLevel; // Convert sea level to numeric
+        console.log('Parsed row:', d.Time, d.SeaLevel);
     });
 
     // Filter out invalid data points
     var filteredData = data.filter(function(d) {
-        var isValid = d.Year instanceof Date && !isNaN(d.CO2Emissions);
+        var isValid = d.Time instanceof Date && !isNaN(d.SeaLevel);
         if (!isValid) {
             console.log('Invalid row:', d);
         }
@@ -43,11 +43,11 @@ d3.csv('data/co2_emission.csv').then(function(data) {
 
     // Define scales
     var x = d3.scaleTime()
-        .domain(d3.extent(filteredData, function(d) { return d.Year; }))
+        .domain(d3.extent(filteredData, function(d) { return d.Time; }))
         .range([0, width]);
 
     var y = d3.scaleLinear()
-        .domain(d3.extent(filteredData, function(d) { return d.CO2Emissions; }))
+        .domain(d3.extent(filteredData, function(d) { return d.SeaLevel; }))
         .nice()
         .range([height, 0]);
 
@@ -68,8 +68,8 @@ d3.csv('data/co2_emission.csv').then(function(data) {
 
     // Draw line chart
     var line = d3.line()
-        .x(function(d) { return x(d.Year); })
-        .y(function(d) { return y(d.CO2Emissions); });
+        .x(function(d) { return x(d.Time); })
+        .y(function(d) { return y(d.SeaLevel); });
 
     svg.append('path')
         .datum(filteredData)
@@ -79,5 +79,5 @@ d3.csv('data/co2_emission.csv').then(function(data) {
         .attr('stroke', 'steelblue')
         .attr('stroke-width', 1.5);
 }).catch(function(error) {
-    console.log('Error loading CO2 emissions data:', error);
+    console.log('Error loading sea level data:', error);
 });
