@@ -15,7 +15,7 @@ function createScene1(data) {
         .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) || 100]); // Default to 100 if max is undefined
 
     // Load world map data
-    d3.json("data/world-map.topojson").then(world => {
+    d3.json("/data/world-map.topojson").then(world => {
         svg.selectAll("path")
             .data(topojson.feature(world, world.objects.countries).features)
             .enter().append("path")
