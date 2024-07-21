@@ -1,5 +1,3 @@
-// app.js
-
 // Function to create the visualization
 function createScene1(data) {
     const width = 960, height = 500;
@@ -12,12 +10,15 @@ function createScene1(data) {
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) || 100]); // Default to 100 if max is undefined
+        .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) || 100]);
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
+        // Log the world data to check its structure
+        console.log(world);
+
         svg.selectAll("path")
-            .data(topojson.feature(world, world.objects.countries).features)
+            .data(topojson.feature(world, world.objects.ne_10m_admin_0_countries).features)
             .enter().append("path")
             .attr("d", path)
             .attr("fill", d => {
@@ -39,7 +40,7 @@ function createScene1(data) {
 }
 
 // Load data and initialize the visualization
-d3.csv("data/lifeExpectancy.csv").then(data => {
+d3.csv("/data/lifeExpectancy.csv").then(data => {
     // Parse data as needed (e.g., convert life expectancy to numbers)
     data.forEach(d => {
         d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
