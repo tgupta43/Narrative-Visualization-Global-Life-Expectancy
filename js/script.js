@@ -26,6 +26,9 @@ function createScene1(data) {
             .attr("d", path)
             .attr("fill", d => {
                 const country = data.find(c => c["Country Code"] === d.id);
+                if (country) {
+                    console.log(`Country: ${country["Country Name"]}, Life Expectancy: ${country["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]}`);
+                }
                 return country ? colorScale(country["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) : "#ccc";
             })
             .attr("stroke", "#fff");
