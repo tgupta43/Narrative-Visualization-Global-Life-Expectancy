@@ -27,24 +27,26 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
-        // Add annotations
+        // Define and add annotations
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
                 align: "left"
             },
-            x: width / 2, y: height / 2, dx: 10, dy: 50,
+            x: width / 2,
+            y: height / 2,
+            dx: 10,
+            dy: 50,
             subject: {
                 radius: 10,
                 radiusPadding: 10
             }
         }];
 
-        // Create annotation object
+        // Ensure d3.annotation is used correctly
         const makeAnnotations = d3.annotation()
             .annotations(annotations);
 
-        // Add annotations to the SVG
         svg.append("g")
             .call(makeAnnotations);
     }).catch(error => {
