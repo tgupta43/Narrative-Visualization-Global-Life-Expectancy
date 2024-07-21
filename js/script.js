@@ -8,7 +8,7 @@ function createScene1(data) {
     // Define the projection with adjusted scale and translation
     const projection = d3.geoMercator()
         .scale(150) // Adjust scale for proper fit
-        .translate([width / 2, height / 1.5]); // Center the map within SVG
+        .translate([width / 2, height / 2]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
