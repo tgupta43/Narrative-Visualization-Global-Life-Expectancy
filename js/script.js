@@ -20,16 +20,19 @@ function createScene1(data) {
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
+        const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
+        console.log("Loaded Countries:", countries.length);
+
+        // Test color scale by assigning a random life expectancy value to each country
         svg.selectAll("path")
-            .data(topojson.feature(world, world.objects.ne_10m_admin_0_countries).features)
+            .data(countries)
             .enter().append("path")
             .attr("d", path)
-            .attr("fill", d => {
-                const country = data.find(c => c["Country Code"] === d.id);
-                if (country) {
-                    console.log(`Country: ${country["Country Name"]}, Life Expectancy: ${country["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]}`);
-                }
-                return country ? colorScale(country["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) : "#ccc";
+            .attr("fill", (d, i) => {
+                // Assign a random life expectancy value for testing
+                const testLifeExpectancy = Math.random() * maxLifeExpectancy;
+                console.log(`Test Value for Country: ${d.id}, Test Life Expectancy: ${testLifeExpectancy}`);
+                return colorScale(testLifeExpectancy);
             })
             .attr("stroke", "#fff");
 
