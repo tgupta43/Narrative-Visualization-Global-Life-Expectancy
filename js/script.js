@@ -12,10 +12,10 @@ function createScene1(data) {
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"])]);
+        .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) || 100]); // Default to 100 if max is undefined
 
     // Load world map data
-    d3.json("path/to/world-map.json").then(world => {
+    d3.json("data/world-map.topojson").then(world => {
         svg.selectAll("path")
             .data(topojson.feature(world, world.objects.countries).features)
             .enter().append("path")
@@ -33,6 +33,8 @@ function createScene1(data) {
         }];
         const makeAnnotations = d3.annotation().annotations(annotations);
         svg.append("g").call(makeAnnotations);
+    }).catch(error => {
+        console.error('Error loading or processing data:', error);
     });
 }
 
@@ -44,4 +46,6 @@ d3.csv("/data/lifeExpectancy.csv").then(data => {
     });
 
     createScene1(data);
+}).catch(error => {
+    console.error('Error loading or processing CSV data:', error);
 });
