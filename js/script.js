@@ -1,3 +1,5 @@
+//script.js
+
 // Function to create the visualization
 function createScene1(data) {
     const width = 960, height = 500;
