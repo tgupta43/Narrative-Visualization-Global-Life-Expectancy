@@ -1,14 +1,14 @@
 // Function to create the visualization
 function createScene1(data) {
-    const width = 960, height = 500;
+    const width = 960, height = 500; // Adjust if necessary
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height);
 
     // Define the projection with adjusted scale and translation
     const projection = d3.geoMercator()
-        .scale(150) // Adjust the scale for proper fit
-        .translate([width / 2, height / 2]); // Center the map
+        .scale(150) // Adjust scale for proper fit
+        .translate([width / 2, height / 1.5]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
@@ -75,15 +75,3 @@ function createScene1(data) {
         console.error('Error loading or processing data:', error);
     });
 }
-
-// Load data and initialize the visualization
-d3.csv("data/lifeExpectancy.csv").then(data => {
-    // Parse data as needed (e.g., convert life expectancy to numbers)
-    data.forEach(d => {
-        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-    });
-
-    createScene1(data);
-}).catch(error => {
-    console.error('Error loading or processing CSV data:', error);
-});
