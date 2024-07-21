@@ -40,7 +40,7 @@ function createScene1(data) {
 }
 
 // Load data and initialize the visualization
-d3.csv("/data/lifeExpectancy.csv").then(data => {
+d3.csv("data/lifeExpectancy.csv").then(data => {
     // Parse data as needed (e.g., convert life expectancy to numbers)
     data.forEach(d => {
         d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
