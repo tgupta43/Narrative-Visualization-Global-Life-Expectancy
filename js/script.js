@@ -5,9 +5,11 @@ function createScene1(data) {
         .attr("width", width)
         .attr("height", height);
 
+    // Center the map within the SVG
     const projection = d3.geoMercator()
-        .scale(150)
+        .scale(150) // Adjust the scale for proper fit
         .translate([width / 2, height / 2]); // Center the map
+
     const path = d3.geoPath().projection(projection);
 
     // Find the max life expectancy value to set the domain of the color scale
