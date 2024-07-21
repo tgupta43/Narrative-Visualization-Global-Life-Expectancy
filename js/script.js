@@ -14,9 +14,6 @@ function createScene1(data) {
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
-        // Log the world data to check its structure
-        console.log(world);
-
         svg.selectAll("path")
             .data(topojson.feature(world, world.objects.ne_10m_admin_0_countries).features)
             .enter().append("path")
@@ -27,7 +24,7 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
-        // Define annotations
+        // Define and add annotations
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
