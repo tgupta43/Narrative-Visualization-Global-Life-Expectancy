@@ -27,7 +27,7 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
-        // Define and add annotations
+        // Define annotations
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -43,12 +43,14 @@ function createScene1(data) {
             }
         }];
 
-        // Ensure d3.annotation is used correctly
+        // Create annotation object
         const makeAnnotations = d3.annotation()
             .annotations(annotations);
 
+        // Add annotations to the SVG
         svg.append("g")
             .call(makeAnnotations);
+
     }).catch(error => {
         console.error('Error loading or processing data:', error);
     });
