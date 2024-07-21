@@ -1,4 +1,4 @@
-//script.js
+// js/script.js
 
 // Function to create the visualization
 function createScene1(data) {
@@ -10,9 +10,13 @@ function createScene1(data) {
     const projection = d3.geoMercator().scale(150).translate([width / 2, height / 1.5]);
     const path = d3.geoPath().projection(projection);
 
+    // Find the max life expectancy value to set the domain of the color scale
+    const maxLifeExpectancy = d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
+    console.log("Max Life Expectancy:", maxLifeExpectancy);
+
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([0, d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]) || 100]);
+        .domain([0, maxLifeExpectancy || 100]);
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
