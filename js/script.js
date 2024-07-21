@@ -5,7 +5,7 @@ function createScene1(data) {
         .attr("width", width)
         .attr("height", height);
 
-    // Center the map within the SVG
+    // Define the projection with adjusted scale and translation
     const projection = d3.geoMercator()
         .scale(150) // Adjust the scale for proper fit
         .translate([width / 2, height / 2]); // Center the map
@@ -25,7 +25,7 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries.length);
 
-        // Test color scale by assigning a random life expectancy value to each country
+        // Append paths for each country
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
@@ -65,7 +65,7 @@ function createScene1(data) {
         // Add a title
         svg.append("text")
             .attr("x", width / 2)
-            .attr("y", 30) // Position the title above the map
+            .attr("y", 40) // Position the title above the map
             .attr("text-anchor", "middle")
             .attr("font-size", "24px")
             .attr("font-weight", "bold")
