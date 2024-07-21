@@ -1,5 +1,3 @@
-// js/script.js
-
 // Function to create the visualization
 function createScene1(data) {
     const width = 960, height = 500;
@@ -7,7 +5,9 @@ function createScene1(data) {
         .attr("width", width)
         .attr("height", height);
 
-    const projection = d3.geoMercator().scale(150).translate([width / 2, height / 1.5]);
+    const projection = d3.geoMercator()
+        .scale(150)
+        .translate([width / 2, height / 2]); // Center the map
     const path = d3.geoPath().projection(projection);
 
     // Find the max life expectancy value to set the domain of the color scale
@@ -59,6 +59,15 @@ function createScene1(data) {
         // Add annotations to the SVG
         svg.append("g")
             .call(makeAnnotations);
+
+        // Add a title
+        svg.append("text")
+            .attr("x", width / 2)
+            .attr("y", 30) // Position the title above the map
+            .attr("text-anchor", "middle")
+            .attr("font-size", "24px")
+            .attr("font-weight", "bold")
+            .text("Global Life Expectancy");
 
     }).catch(error => {
         console.error('Error loading or processing data:', error);
