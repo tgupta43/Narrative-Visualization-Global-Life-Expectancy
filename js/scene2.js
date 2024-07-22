@@ -21,7 +21,7 @@ function createScene2(data) {
 
     console.log("Country Data Map:", countryDataMap); // Log to verify calculations
 
-    const values = [...countryDataMap.values()];
+    const values = [...countryDataMap.entries()].map(([countryName, { averageLifeExpectancy, averageGDP }]) => ({ countryName, averageLifeExpectancy, averageGDP }));
     const minLifeExpectancy = d3.min(values, d => d.averageLifeExpectancy);
     const maxLifeExpectancy = d3.max(values, d => d.averageLifeExpectancy);
     const minGDP = d3.min(values, d => d.averageGDP);
@@ -69,12 +69,11 @@ function createScene2(data) {
         .attr("r", 5)
         .attr("fill", d => d.averageLifeExpectancy > 0 ? colorScale(d.averageLifeExpectancy) : "#000")
         .on("mouseover", function(event, d) {
-            const countryName = data.find(entry => entry["Country Name"] === d.country)["Country Name"];
             d3.select("#tooltip")
                 .style("display", "block")
                 .style("left", (event.pageX + 5) + "px")
                 .style("top", (event.pageY - 28) + "px")
-                .html(`<strong>${countryName}</strong><br>GDP: $${d.averageGDP.toLocaleString()}<br>Life Expectancy: ${d.averageLifeExpectancy} yr`);
+                .html(`<strong>${d.countryName}</strong><br>GDP: $${d.averageGDP.toLocaleString()}<br>Life Expectancy: ${d.averageLifeExpectancy} yr`);
         })
         .on("mouseout", function() {
             d3.select("#tooltip").style("display", "none");
