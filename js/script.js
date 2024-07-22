@@ -28,6 +28,7 @@ function createScene1(data) {
     data.forEach(d => {
         countryDataMap.set(d["Country Name"], d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     });
+    console.log("Country Data Map:", [...countryDataMap.entries()]); // Log the map for verification
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
@@ -42,8 +43,9 @@ function createScene1(data) {
             .attr("d", path)
             .attr("fill", d => {
                 // Find life expectancy for each country
-                const countryName = d.properties.NAME; // Assuming `d.properties.name` is the country name
+                const countryName = d.properties.NAME; // Using `NAME` property
                 const lifeExpectancy = countryDataMap.get(countryName);
+                console.log(`Country: ${countryName}, Life Expectancy: ${lifeExpectancy}`); // Log for verification
                 return colorScale(lifeExpectancy || 0);
             })
             .attr("stroke", "#fff");
