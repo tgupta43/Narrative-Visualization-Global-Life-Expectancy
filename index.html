@@ -6,7 +6,7 @@
     <title>Global Life Expectancy Visualization</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-    <script src="js/d3-annotation.min.js"></script>
+    <script src="js/d3-annotation.min.js"></script> <!-- Adjust path as necessary -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,15 +19,13 @@
         }
         #visualization-container {
             display: flex;
-            width: 100%;
-            height: 90vh;
-        }
-        #annotations {
-            width: 20%;
-            padding: 10px;
+            align-items: flex-start;
+            width: 90vw;
+            height: 80vh;
+            position: relative;
         }
         #visualization {
-            width: 60%;
+            width: 80%;
             height: 100%;
             position: relative;
         }
@@ -55,7 +53,6 @@
             text-align: right;
             font-size: 12px;
         }
-        /* Tooltip styles */
         #tooltip {
             position: absolute;
             background-color: white;
@@ -66,18 +63,22 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             border-radius: 4px;
         }
+        .annotation-label {
+            font-size: 14px;
+            text-align: left;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
     <div id="visualization-container">
-        <div id="annotations"></div>
         <div id="visualization">
             <div id="map-title">Global Life Expectancy</div>
             <div id="map-subtitle">Hover over each country to see the Life Expectancy in years</div>
         </div>
         <div class="legend" id="legend"></div>
     </div>
-    <!-- Tooltip Element -->
+    <div id="annotations"></div>
     <div id="tooltip"></div>
     <script src="js/script.js"></script>
 </body>
