@@ -28,8 +28,7 @@ function createScene1(data) {
 
     data.forEach(d => {
         const countryName = d["Country Name"].trim();
-        const lifeExpectancyStr = d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"].trim();
-        const lifeExpectancy = parseFloat(lifeExpectancyStr);
+        const lifeExpectancy = parseFloat(d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
 
         if (!isNaN(lifeExpectancy)) {
             if (countryDataMap.has(countryName)) {
@@ -152,10 +151,6 @@ function createScene1(data) {
 // Load data and initialize the visualization
 d3.csv("data/lifeExpectancy.csv").then(data => {
     console.log("CSV Data Loaded:", data); // Add a log to verify data loading
-    data.forEach(d => {
-        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-    });
-
     createScene1(data);
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
