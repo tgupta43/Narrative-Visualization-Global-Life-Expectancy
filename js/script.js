@@ -2,15 +2,13 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
     
-    const width = 1260, height = 700; // Adjust if necessary
-    const svg = d3.select("#visualization").append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    // Select the SVG element and get its dimensions
+    const svg = d3.select("#visualization").select("svg");
+    const width = svg.node().getBoundingClientRect().width;
+    const height = svg.node().getBoundingClientRect().height;
 
-    const projection = d3.geoMercator()
-        .scale(100) // Adjust scale for proper fit
-        .translate([width / 2, height / 1.5]); // Adjust translation to move map down
-
+    // Set up the projection
+    const projection = d3.geoMercator();
     const path = d3.geoPath().projection(projection);
 
     const maxLifeExpectancy = d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
@@ -24,6 +22,21 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
+        // Calculate bounds to center and scale the map
+        const bounds = path.bounds(topojson.feature(world, world.objects.ne_10m_admin_0_countries));
+        const dx = bounds[1][0] - bounds[0][0];
+        const dy = bounds[1][1] - bounds[0][1];
+        const x = (bounds[0][0] + bounds[1][0]) / 2;
+        const y = (bounds[0][1] + bounds[1][1]) / 2;
+        const scale = 0.95 / Math.max(dx / width, dy / height);
+        const translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+        projection
+            .scale(scale)
+            .translate(translate);
+
+        svg.selectAll("path").remove(); // Clear existing paths
+
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
@@ -33,7 +46,7 @@ function createScene1(data) {
                 return colorScale(testLifeExpectancy);
             })
             .attr("stroke", "#fff");
-        
+
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -78,4 +91,22 @@ d3.csv("data/lifeExpectancy.csv").then(data => {
     createScene1(data);
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
+});
+
+// Adjust map on window resize
+window.addEventListener("resize", () => {
+    d3.select("#visualization").select("svg").remove(); // Remove old SVG
+    const svg = d3.select("#visualization").append("svg") // Create new SVG
+        .attr("width", "100%")
+        .attr("height", "100%");
+    
+    d3.csv("data/lifeExpectancy.csv").then(data => {
+        data.forEach(d => {
+            d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
+        });
+
+        createScene1(data); // Re-create the map with updated dimensions
+    }).catch(error => {
+        console.error('Error loading or processing CSV data:', error);
+    });
 });
