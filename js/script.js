@@ -85,6 +85,21 @@ function createScene1(data) {
             .attr("width", legendWidth - 5)
             .attr("height", (d, i) => i === 0 ? 0 : (d / (maxLifeExpectancy || 100)) * legendHeight - ((d - (maxLifeExpectancy || 100) / 10) / (maxLifeExpectancy || 100)) * legendHeight)
             .style("fill", d => colorScale(d));
+
+        // Add max and min labels to the legend
+        legend.append("text")
+            .attr("x", legendWidth + 5)
+            .attr("y", 10)
+            .attr("text-anchor", "start")
+            .attr("font-size", "12px")
+            .text("Max: " + Math.round(maxLifeExpectancy));
+
+        legend.append("text")
+            .attr("x", legendWidth + 5)
+            .attr("y", legendHeight - 5)
+            .attr("text-anchor", "start")
+            .attr("font-size", "12px")
+            .text("Min: 0");
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
