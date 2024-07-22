@@ -61,7 +61,7 @@ function createScene1(data) {
         };
         
         svg.append("path")
-            .data([testFeature])
+            .data(testFeature)
             .attr("d", path)
             .attr("fill", "lightblue")
             .attr("stroke", "#fff");
