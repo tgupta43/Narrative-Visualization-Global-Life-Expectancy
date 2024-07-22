@@ -2,7 +2,7 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
-    const width = 800, height = 600; // Adjust size for better fit
+    const width = 1200, height = 800; // Increase size for larger map
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -10,7 +10,7 @@ function createScene1(data) {
         .attr("viewBox", `0 0 ${width} ${height}`);
 
     const projection = d3.geoMercator()
-        .scale(65) // Adjust scale for proper fit
+        .scale(120) // Adjust scale for larger map
         .translate([width / 2, height / 2]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
@@ -84,8 +84,8 @@ function createScene1(data) {
             });
 
         // Create the legend
-        const legendWidth = 40;
-        const legendHeight = height / 1.5;
+        const legendWidth = 60; // Increase legend width
+        const legendHeight = height / 1.5; // Adjust height for larger legend
         const legend = d3.select("#legend").append("svg")
             .attr("width", legendWidth)
             .attr("height", legendHeight);
