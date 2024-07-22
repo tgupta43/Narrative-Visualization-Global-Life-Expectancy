@@ -15,19 +15,17 @@ function createScene1(data) {
 
     const path = d3.geoPath().projection(projection);
 
-    // Define cutoff value
-    const cutoff = 40;
+    // Calculate min and max life expectancy
+    const lifeExpectancies = data.map(d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(value => !isNaN(value));
+    const minLifeExpectancy = d3.min(lifeExpectancies.filter(val => val > 0)) || 0; // Exclude zero
+    const maxLifeExpectancy = d3.max(lifeExpectancies) || 100;
 
-    // Calculate max life expectancy
-    const maxLifeExpectancy = d3.max(data, d => {
-        const lifeExpectancy = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-        return (lifeExpectancy >= cutoff) ? lifeExpectancy : cutoff;
-    });
+    console.log("Min Life Expectancy:", minLifeExpectancy);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
 
-    // Color scale for life expectancy with black for below cutoff
+    // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([cutoff, maxLifeExpectancy || cutoff]);
+        .domain([minLifeExpectancy, maxLifeExpectancy]);
 
     // Create a map from country names to averaged life expectancy values
     const countryDataMap = new Map();
@@ -72,30 +70,9 @@ function createScene1(data) {
                 const countryName = d.properties.NAME; // Using `NAME` property
                 const lifeExpectancy = finalCountryDataMap.get(countryName);
                 console.log(`Country: ${countryName}, Life Expectancy: ${lifeExpectancy}`); // Log for verification
-                return (lifeExpectancy < cutoff) ? '#000' : colorScale(lifeExpectancy || 0);
+                return lifeExpectancy < minLifeExpectancy ? "black" : colorScale(lifeExpectancy);
             })
-            .attr("stroke", "#fff")
-            .on("mouseover", (event, d) => {
-                const countryName = d.properties.NAME;
-                const lifeExpectancy = finalCountryDataMap.get(countryName);
-                d3.select("#tooltip")
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px")
-                    .style("display", "inline-block")
-                    .html(`<strong>${countryName}</strong><br>Life Expectancy: ${lifeExpectancy}`);
-            })
-            .on("mouseout", () => {
-                d3.select("#tooltip").style("display", "none");
-            });
-
-        // Define and add annotations
-        const annotations = []; // Removed the previous annotation as per request
-
-        const makeAnnotations = d3.annotation()
-            .annotations(annotations);
-
-        svg.append("g")
-            .call(makeAnnotations);
+            .attr("stroke", "#fff");
 
         // Create the legend
         const legendWidth = 40;
@@ -105,7 +82,7 @@ function createScene1(data) {
             .attr("height", legendHeight);
 
         const legendScale = d3.scaleLinear()
-            .domain([cutoff, maxLifeExpectancy || cutoff])
+            .domain([minLifeExpectancy, maxLifeExpectancy])
             .range([legendHeight, 0]);
 
         const legendAxis = d3.axisRight(legendScale)
@@ -117,12 +94,12 @@ function createScene1(data) {
             .call(legendAxis);
 
         legend.selectAll("rect")
-            .data(d3.range(cutoff, maxLifeExpectancy || cutoff, (maxLifeExpectancy || cutoff - cutoff) / 10))
+            .data(d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / 10))
             .enter().append("rect")
             .attr("x", 0)
-            .attr("y", d => legendHeight - (d / (maxLifeExpectancy || cutoff)) * legendHeight)
+            .attr("y", d => legendHeight - (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
             .attr("width", legendWidth - 5)
-            .attr("height", (d, i) => i === 0 ? 0 : (d / (maxLifeExpectancy || cutoff)) * legendHeight - ((d - (maxLifeExpectancy || cutoff) / 10) / (maxLifeExpectancy || cutoff)) * legendHeight)
+            .attr("height", (d, i) => i === 0 ? 0 : (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight - ((d - (maxLifeExpectancy - minLifeExpectancy) / 10) - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
             .style("fill", d => colorScale(d));
 
         // Add max and min labels to the legend
@@ -131,14 +108,14 @@ function createScene1(data) {
             .attr("y", 20)
             .attr("text-anchor", "start")
             .attr("font-size", "12px")
-            .text("Max: " + (maxLifeExpectancy));
+            .text("Max: " + maxLifeExpectancy);
 
         legend.append("text")
             .attr("x", legendWidth + 5)
             .attr("y", legendHeight - 5)
             .attr("text-anchor", "start")
             .attr("font-size", "12px")
-            .text("Min: " + cutoff);
+            .text("Min: " + minLifeExpectancy);
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
