@@ -4,7 +4,7 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
     
-    const width = 960, height = 500; // Adjust if necessary
+    const width = 1260, height = 700; // Adjust if necessary
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height);
