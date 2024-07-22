@@ -1,5 +1,3 @@
-// js/script.js
-
 // Function to create the visualization
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
@@ -10,8 +8,8 @@ function createScene1(data) {
         .attr("height", height);
 
     const projection = d3.geoMercator()
-        .scale(60) // Adjust scale for proper fit
-        //.translate([width / 2, height / 1.5]); // Center the map within SVG
+        .scale(150) // Adjust scale for proper fit
+        .translate([width / 2, height / 2.1]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
