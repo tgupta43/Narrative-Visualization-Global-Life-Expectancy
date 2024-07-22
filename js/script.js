@@ -2,16 +2,16 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
-    const width = 1200, height = 800; // Increase size for larger map
+    const width = 960, height = 500; // Set to standard dimensions
     const svg = d3.select("#visualization").append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("preserveAspectRatio", "xMidYMid meet")
-        .attr("viewBox", `0 0 ${width} ${height}`);
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .attr("preserveAspectRatio", "xMidYMid meet");
 
     const projection = d3.geoMercator()
-        .scale(120) // Adjust scale for larger map
-        .translate([width / 2, height / 2]); // Center the map within SVG
+        .scale(150) // Adjust scale for standard dimensions
+        .translate([width / 2, height / 1.5]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
@@ -164,7 +164,7 @@ function createScene1(data) {
         const newWidth = svg.node().parentNode.clientWidth;
         const newHeight = svg.node().parentNode.clientHeight;
         svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
-        projection.translate([newWidth / 2, newHeight / 2]);
+        projection.translate([newWidth / 2, newHeight / 1.5]); // Adjust to keep map centered
         svg.selectAll("path").attr("d", path);
     });
 }
