@@ -8,7 +8,7 @@ function createScene1(data) {
         .attr("viewBox", `0 0 ${initialWidth} ${initialHeight}`);
 
     const projection = d3.geoMercator()
-        .scale(65) // Adjust scale for larger map
+        .scale(85) // Adjust scale for larger map
         .translate([initialWidth / 2, initialHeight / 1.5]); // Center the map
 
     const path = d3.geoPath().projection(projection);
