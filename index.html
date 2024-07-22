@@ -19,30 +19,33 @@
         }
         #visualization-container {
             display: flex;
-            align-items: center;
-            width: 90vw; /* Adjust width of container */
-            height: 80vh; /* Adjust height of container */
+            width: 90vw;
+            height: 80vh;
+        }
+        #annotations {
+            width: 20%;
+            padding: 10px;
         }
         #visualization {
-            width: 80%; /* Adjust width of visualization */
+            width: 60%;
             height: 100%;
             position: relative;
         }
         #map-title {
-            font-size: 32px; /* Increase title font size */
+            font-size: 32px;
             font-weight: bold;
             text-align: center;
-            margin-bottom: 10px; /* Reduce space between title and map */
+            margin-bottom: 10px;
         }
         #map-subtitle {
-            font-size: 18px; /* Subtitle font size */
+            font-size: 18px;
             text-align: center;
-            margin-bottom: 20px; /* Space between subtitle and map */
+            margin-bottom: 20px;
         }
         .legend {
             width: 20%;
             height: 100%;
-            margin-left: 20px; /* Space between map and legend */
+            margin-left: 20px;
         }
         .legend svg {
             width: 100%;
@@ -59,7 +62,7 @@
             border: 1px solid #ccc;
             padding: 5px;
             display: none;
-            pointer-events: none; /* Prevents the tooltip from interfering with mouse events */
+            pointer-events: none;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
             border-radius: 4px;
         }
@@ -67,6 +70,7 @@
 </head>
 <body>
     <div id="visualization-container">
+        <div id="annotations"></div>
         <div id="visualization">
             <div id="map-title">Global Life Expectancy</div>
             <div id="map-subtitle">Hover over each country to see the Life Expectancy in years</div>

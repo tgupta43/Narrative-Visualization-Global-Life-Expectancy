@@ -2,7 +2,6 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
-
     const width = 1200, height = 800; // Increase size for larger map
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
@@ -10,23 +9,18 @@ function createScene1(data) {
         .attr("preserveAspectRatio", "xMidYMid meet")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
-
     const projection = d3.geoMercator()
         .scale(120) // Adjust scale for larger map
         .translate([width / 2, height / 2]); // Center the map within SVG
 
-
     const path = d3.geoPath().projection(projection);
-
 
     // Create a map from country names to averaged life expectancy values
     const countryDataMap = new Map();
 
-
     data.forEach(d => {
         const countryName = d["Country Name"].trim();
         const lifeExpectancy = parseFloat(d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
-
 
         if (!isNaN(lifeExpectancy)) {
             if (countryDataMap.has(countryName)) {
@@ -40,34 +34,28 @@ function createScene1(data) {
         }
     });
 
-
     // Finalize the map with averaged values
     const finalCountryDataMap = new Map();
     countryDataMap.forEach((value, key) => {
         finalCountryDataMap.set(key, value.sum / value.count);
     });
 
-
     const values = [...finalCountryDataMap.values()];
     const minLifeExpectancy = d3.min(values);
     const maxLifeExpectancy = d3.max(values);
 
-
     console.log("Min Life Expectancy:", minLifeExpectancy);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
-
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
-
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
         console.log("World TopoJSON Data:", world); // Add a log to verify data
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
-
 
         // Add countries to the map with color based on life expectancy
         svg.selectAll("path")
@@ -95,7 +83,6 @@ function createScene1(data) {
                 d3.select("#tooltip").style("display", "none");
             });
 
-
         // Create the legend
         const legendWidth = 60; // Increase legend width
         const legendHeight = height / 1.5; // Adjust height for larger legend
@@ -103,21 +90,17 @@ function createScene1(data) {
             .attr("width", legendWidth)
             .attr("height", legendHeight);
 
-
         const legendScale = d3.scaleLinear()
             .domain([minLifeExpectancy, maxLifeExpectancy])
             .range([legendHeight, 0]);
-
 
         const legendAxis = d3.axisRight(legendScale)
             .ticks(10)
             .tickSize(5);
 
-
         legend.append("g")
             .attr("transform", `translate(${legendWidth - 10}, 0)`)
             .call(legendAxis);
-
 
         // Create color blocks for the legend
         const numBlocks = 10;
@@ -131,7 +114,6 @@ function createScene1(data) {
             .attr("height", blockHeight)
             .style("fill", d => colorScale(d));
 
-
         // Add max and min labels to the legend
         legend.append("text")
             .attr("x", legendWidth + 5)
@@ -140,17 +122,42 @@ function createScene1(data) {
             .attr("font-size", "12px")
             .text("Max: " + maxLifeExpectancy);
 
-
         legend.append("text")
             .attr("x", legendWidth + 5)
             .attr("y", legendHeight - 5)
             .attr("text-anchor", "start")
             .attr("font-size", "12px")
             .text("Min: " + minLifeExpectancy);
+
+        // Annotations
+        const annotations = [
+            {
+                note: { label: "Countries with highest life expectancy", title: "High Life Expectancy" },
+                x: 50, y: 100, dy: 37, dx: 62
+            },
+            {
+                note: { label: "Countries with lowest life expectancy", title: "Low Life Expectancy" },
+                x: 50, y: 200, dy: 37, dx: 62
+            },
+            {
+                note: { label: "Notable differences between continents", title: "Continental Differences" },
+                x: 50, y: 300, dy: 37, dx: 62
+            }
+        ];
+
+        const makeAnnotations = d3.annotation()
+            .type(d3.annotationLabel)
+            .annotations(annotations);
+
+        d3.select("#annotations")
+            .append("svg")
+            .attr("width", 200)
+            .attr("height", 500)
+            .call(makeAnnotations);
+
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
-
 
     // Handle window resize to adjust the projection
     window.addEventListener('resize', () => {
@@ -162,7 +169,6 @@ function createScene1(data) {
     });
 }
 
-
 // Load data and initialize the visualization
 d3.csv("data/lifeExpectancy.csv").then(data => {
     console.log("CSV Data Loaded:", data); // Add a log to verify data loading
@@ -170,5 +176,3 @@ d3.csv("data/lifeExpectancy.csv").then(data => {
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
 });
-
-
