@@ -129,61 +129,31 @@ function createScene1(data) {
             .attr("font-size", "12px")
             .text("Min: " + minLifeExpectancy);
 
-        // Annotations using d3-annotation
+        // Annotations
         const annotations = [
             {
-                note: {
-                    label: "Countries with highest life expectancy",
-                    wrap: 200
-                },
-                x: 10,
-                y: 10,
-                dx: 0,
-                dy: 0
+                note: { label: "Countries with highest life expectancy", title: "High Life Expectancy" },
+                x: 50, y: 100, dy: 37, dx: 62
             },
             {
-                note: {
-                    label: "Countries with lowest life expectancy",
-                    wrap: 200
-                },
-                x: 10,
-                y: 30,
-                dx: 0,
-                dy: 0
+                note: { label: "Countries with lowest life expectancy", title: "Low Life Expectancy" },
+                x: 50, y: 200, dy: 37, dx: 62
             },
             {
-                note: {
-                    label: "Notable differences between continents",
-                    wrap: 200
-                },
-                x: 10,
-                y: 50,
-                dx: 0,
-                dy: 0
+                note: { label: "Notable differences between continents", title: "Continental Differences" },
+                x: 50, y: 300, dy: 37, dx: 62
             }
         ];
 
         const makeAnnotations = d3.annotation()
-            .annotations(annotations)
             .type(d3.annotationLabel)
-            .accessors({
-                x: d => d.x,
-                y: d => d.y
-            })
-            .accessorsInverse({
-                x: d => d.x,
-                y: d => d.y
-            })
-            .notePadding(10);
+            .annotations(annotations);
 
         d3.select("#annotations")
             .append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%")
+            .attr("width", 200)
+            .attr("height", 500)
             .call(makeAnnotations);
-
-        // Remove annotation connectors
-        d3.selectAll(".connector").style("display", "none");
 
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
