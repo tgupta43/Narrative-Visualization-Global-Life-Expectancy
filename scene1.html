@@ -23,9 +23,17 @@
             width: 80vw; /* Adjusted for better centering */
             height: 80vh; /* Adjusted for better centering */
         }
-        #annotations {
+        .legend {
             width: 20%;
             padding: 10px;
+        }
+        .legend svg {
+            width: 100%;
+            height: 100%;
+        }
+        .legend-text {
+            text-align: right;
+            font-size: 12px;
         }
         #visualization {
             width: 60%;
@@ -43,18 +51,10 @@
             text-align: center;
             margin-bottom: 20px;
         }
-        .legend {
+        #annotations {
             width: 20%;
             height: 100%;
             margin-left: 20px;
-        }
-        .legend svg {
-            width: 100%;
-            height: 100%;
-        }
-        .legend-text {
-            text-align: right;
-            font-size: 12px;
         }
         /* Tooltip styles */
         #tooltip {
@@ -93,12 +93,12 @@
 </head>
 <body>
     <div id="visualization-container">
-        <div id="annotations"></div>
+        <div class="legend" id="legend"></div>
         <div id="visualization">
             <div id="map-title">Global Life Expectancy</div>
             <div id="map-subtitle">Hover over each country to see the Life Expectancy in years</div>
         </div>
-        <div class="legend" id="legend"></div>
+        <div id="annotations"></div>
     </div>
     <div id="navigation">
         <button id="prev-btn" onclick="location.href='index.html'">Previous</button>

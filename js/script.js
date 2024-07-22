@@ -83,6 +83,29 @@ function createScene1(data) {
                 d3.select("#tooltip").style("display", "none");
             });
 
+        // Annotations
+        const annotations = [
+            {
+                note: { label: "North America and Europe have higher life expectancies than the other continents. What can be the reason for this? Click next to explore.", title: "Notable Differences Between Continents" },
+                x: 50, y: 100, dy: 37, dx: 62
+            }
+        ];
+
+        const makeAnnotations = d3.annotation()
+            .type(d3.annotationLabel)
+            .annotations(annotations);
+
+        d3.select("#annotations")
+            .append("svg")
+            .attr("width", 200)
+            .attr("height", 500)
+            .call(makeAnnotations)
+            .selectAll(".annotation-connector") // Remove connector lines
+            .style("display", "none")
+            .selectAll(".annotation-note")
+            .style("stroke", "none") // Ensure no stroke
+            .style("fill", "none"); // Ensure no fill
+
         // Create the legend
         const legendWidth = 60; // Increase legend width
         const legendHeight = height / 1.5; // Adjust height for larger legend
@@ -129,28 +152,6 @@ function createScene1(data) {
             .attr("font-size", "12px")
             .text("Min: " + minLifeExpectancy);
 
-        // Annotations
-        const annotations = [
-            {
-                note: { label: "North America and Europe have higher life expectancies than the other continents. What can be the reason for this? Click next to explore.", title: "Notable Differences Between Continents" },
-                x: 50, y: 100, dy: 37, dx: 62
-            }
-        ];
-
-        const makeAnnotations = d3.annotation()
-            .type(d3.annotationLabel)
-            .annotations(annotations);
-
-        d3.select("#annotations")
-            .append("svg")
-            .attr("width", 200)
-            .attr("height", 500)
-            .call(makeAnnotations)
-            .selectAll(".annotation-connector") // Remove connector lines
-            .style("display", "none")
-            .selectAll(".annotation-note")
-            .style("stroke", "none") // Ensure no stroke
-            .style("fill", "none"); // Ensure no fill
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
