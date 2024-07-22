@@ -57,8 +57,6 @@ function createScene1(data) {
         svg.append("g")
             .call(makeAnnotations);
 
-        // No title appending here as title is in HTML
-
         // Create the legend
         const legendWidth = 20;
         const legendHeight = 200;
@@ -88,7 +86,7 @@ function createScene1(data) {
             .attr("width", 10)
             .attr("height", d => legendHeight * (d / (maxLifeExpectancy || 100)))
             .style("fill", d => colorScale(d));
-        
+
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
