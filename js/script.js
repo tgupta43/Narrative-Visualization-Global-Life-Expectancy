@@ -19,9 +19,12 @@ function createScene1(data) {
     const maxLifeExpectancy = d3.max(data, d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
 
-    // Color scale for life expectancy
+    // Define cutoff value
+    const cutoff = 40;
+
+    // Color scale for life expectancy with black for below cutoff
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([0, maxLifeExpectancy || 100]);
+        .domain([cutoff, maxLifeExpectancy || cutoff]);
 
     // Create a map from country names to averaged life expectancy values
     const countryDataMap = new Map();
@@ -66,27 +69,24 @@ function createScene1(data) {
                 const countryName = d.properties.NAME; // Using `NAME` property
                 const lifeExpectancy = finalCountryDataMap.get(countryName);
                 console.log(`Country: ${countryName}, Life Expectancy: ${lifeExpectancy}`); // Log for verification
-                return colorScale(lifeExpectancy || 0);
+                return (lifeExpectancy < cutoff) ? '#000' : colorScale(lifeExpectancy || 0);
             })
             .attr("stroke", "#fff")
-            .on("mouseover", function(event, d) {
-                // Show tooltip
+            .on("mouseover", (event, d) => {
                 const countryName = d.properties.NAME;
                 const lifeExpectancy = finalCountryDataMap.get(countryName);
                 d3.select("#tooltip")
-                    .style("left", `${event.pageX + 5}px`)
-                    .style("top", `${event.pageY - 28}px`)
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px")
                     .style("display", "inline-block")
-                    .html(`<strong>${countryName}</strong><br>Life Expectancy: ${lifeExpectancy || "N/A"}`);
+                    .html(`<strong>${countryName}</strong><br>Life Expectancy: ${lifeExpectancy}`);
             })
-            .on("mouseout", function() {
-                // Hide tooltip
-                d3.select("#tooltip")
-                    .style("display", "none");
+            .on("mouseout", () => {
+                d3.select("#tooltip").style("display", "none");
             });
 
         // Define and add annotations
-        const annotations = []; // Removed previous annotation
+        const annotations = []; // Removed the previous annotation as per request
 
         const makeAnnotations = d3.annotation()
             .annotations(annotations);
@@ -102,7 +102,7 @@ function createScene1(data) {
             .attr("height", legendHeight);
 
         const legendScale = d3.scaleLinear()
-            .domain([0, maxLifeExpectancy || 100])
+            .domain([cutoff, maxLifeExpectancy || cutoff])
             .range([legendHeight, 0]);
 
         const legendAxis = d3.axisRight(legendScale)
@@ -114,12 +114,12 @@ function createScene1(data) {
             .call(legendAxis);
 
         legend.selectAll("rect")
-            .data(d3.range(0, maxLifeExpectancy || 100, (maxLifeExpectancy || 100) / 10))
+            .data(d3.range(cutoff, maxLifeExpectancy || cutoff, (maxLifeExpectancy || cutoff - cutoff) / 10))
             .enter().append("rect")
             .attr("x", 0)
-            .attr("y", d => legendHeight - (d / (maxLifeExpectancy || 100)) * legendHeight)
+            .attr("y", d => legendHeight - (d / (maxLifeExpectancy || cutoff)) * legendHeight)
             .attr("width", legendWidth - 5)
-            .attr("height", (d, i) => i === 0 ? 0 : (d / (maxLifeExpectancy || 100)) * legendHeight - ((d - (maxLifeExpectancy || 100) / 10) / (maxLifeExpectancy || 100)) * legendHeight)
+            .attr("height", (d, i) => i === 0 ? 0 : (d / (maxLifeExpectancy || cutoff)) * legendHeight - ((d - (maxLifeExpectancy || cutoff) / 10) / (maxLifeExpectancy || cutoff)) * legendHeight)
             .style("fill", d => colorScale(d));
 
         // Add max and min labels to the legend
@@ -135,7 +135,7 @@ function createScene1(data) {
             .attr("y", legendHeight - 5)
             .attr("text-anchor", "start")
             .attr("font-size", "12px")
-            .text("Min: 0");
+            .text("Min: " + cutoff);
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
