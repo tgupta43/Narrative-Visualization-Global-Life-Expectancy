@@ -8,7 +8,7 @@ function createScene1(data) {
         .attr("viewBox", `0 0 ${initialWidth} ${initialHeight}`);
 
     const projection = d3.geoMercator()
-        .scale(85) // Set scale to 65 for the map size
+        .scale(65) // Set scale to 65 for the map size
         .translate([initialWidth / 2, initialHeight / 1.5]); // Initial translation to center the map
 
     const path = d3.geoPath().projection(projection);
@@ -55,14 +55,7 @@ function createScene1(data) {
         svg.append("g")
             .call(makeAnnotations);
 
-        svg.append("text")
-            .attr("id", "map-title") // Add an ID for easier selection in CSS
-            .attr("x", initialWidth / 2)
-            .attr("y", 30) // Adjust y position for better visibility
-            .attr("text-anchor", "middle")
-            .attr("font-size", "24px")
-            .attr("font-weight", "bold")
-            .text("Global Life Expectancy");
+        // No title appending here as title is in HTML
 
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
@@ -75,7 +68,6 @@ function createScene1(data) {
         svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
         projection.translate([newWidth / 2, newHeight / 1.5]);
         svg.selectAll("path").attr("d", path);
-        svg.select("#map-title").attr("x", newWidth / 2); // Adjust title position on resize
     });
 }
 
