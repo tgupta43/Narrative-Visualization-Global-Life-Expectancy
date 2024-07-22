@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Life Expectancy Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #title-page {
+            padding: 20px;
+        }
+        #title-page h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        #title-page h2 {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        #navigation {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+        #navigation button {
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="title-page">
+        <h1>Global Life Expectancy and its Factors</h1>
+        <h2>Ever wondered whether different geographical locations have different life expectancies? We are all biologically human, so why would we have different life spans? Let's explore the Life expectancies around the world and possible factors.</h2>
+    </div>
+    <div id="navigation">
+        <button id="next-btn">Next</button>
+    </div>
+    <script src="js/title.js"></script>
+</body>
+</html>
