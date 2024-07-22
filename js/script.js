@@ -8,8 +8,8 @@ function createScene1(data) {
         .attr("viewBox", `0 0 ${initialWidth} ${initialHeight}`);
 
     const projection = d3.geoMercator()
-        .scale(80) // Set scale to 65 for the map size
-        .translate([initialWidth / 2, initialHeight / 1.5]); // Initial translation to center the map
+        .scale(65) // Adjust scale for larger map
+        .translate([initialWidth / 2, initialHeight / 1.5]); // Center the map
 
     const path = d3.geoPath().projection(projection);
 
@@ -80,5 +80,5 @@ d3.csv("data/lifeExpectancy.csv").then(data => {
 
     createScene1(data);
 }).catch(error => {
-        console.error('Error loading or processing CSV data:', error);
+    console.error('Error loading or processing CSV data:', error);
 });
