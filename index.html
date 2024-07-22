@@ -73,9 +73,17 @@
             text-align: left;
             line-height: 1.5;
         }
-        .annotation .note {
-            list-style-type: disc;
-            margin-left: 20px;
+        .annotation .annotation-note {
+            list-style-type: none;
+            padding-left: 1.2em;
+            position: relative;
+        }
+        .annotation .annotation-note:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+            color: black;
         }
     </style>
 </head>

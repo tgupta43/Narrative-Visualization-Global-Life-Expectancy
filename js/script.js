@@ -155,7 +155,14 @@ function createScene1(data) {
             .attr("height", 500)
             .call(makeAnnotations)
             .selectAll(".annotation-note")
-            .style("stroke", "none"); // Remove lines from annotations
+            .style("stroke", "none") // Remove lines from annotations
+            .style("fill", "none")  // Remove the fill
+            .style("list-style-type", "none") // Ensure list-style-type is none
+            .append("circle") // Add bullet points
+            .attr("cx", -10) // Position the circle as a bullet
+            .attr("cy", 0)
+            .attr("r", 4) // Size of the bullet
+            .style("fill", "black"); // Bullet color
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
