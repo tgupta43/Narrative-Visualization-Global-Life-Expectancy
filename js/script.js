@@ -2,14 +2,16 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
-    const initialWidth = 1260, initialHeight = 700;
+    const width = 1260, height = 700; // Set initial dimensions
     const svg = d3.select("#visualization").append("svg")
+        .attr("width", width)
+        .attr("height", height)
         .attr("preserveAspectRatio", "xMidYMid meet")
-        .attr("viewBox", `0 0 ${initialWidth} ${initialHeight}`);
+        .attr("viewBox", `0 0 ${width} ${height}`);
 
     const projection = d3.geoMercator()
-        .scale(95) // Adjust scale for larger map
-        .translate([initialWidth / 2, initialHeight / 1.5]); // Center the map
+        .scale(65) // Adjust scale for proper fit
+        .translate([width / 2, height / 1.5]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
@@ -39,8 +41,8 @@ function createScene1(data) {
                 label: "Global average life expectancy has increased significantly.",
                 align: "left"
             },
-            x: initialWidth / 2,
-            y: initialHeight / 2,
+            x: width / 2,
+            y: height / 2,
             dx: 10,
             dy: 50,
             subject: {
