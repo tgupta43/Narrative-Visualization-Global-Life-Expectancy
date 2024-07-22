@@ -1,200 +1,160 @@
-// Function to create the scatter plot visualization
+// Function to create the visualization
 function createScene2(data) {
-    console.log("Data for Scene 2:", data); // Add a log to verify data
+    // Log the data for debugging
+    console.log("Data for Scene 2:", data);
 
-    const width = 960, height = 500; // Set to standard dimensions
+    const width = 960, height = 500;
     const svg = d3.select("#visualization").append("svg")
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Process the data to compute average life expectancy and GDP per country
-    const countryDataMap = new Map();
-
+    // Parse the CSV data
     data.forEach(d => {
-        const countryName = d["Country Name"].trim();
-        const gdp = parseFloat(d["GDP (current US$) [NY.GDP.MKTP.CD]"]);
-        const lifeExpectancy = parseFloat(d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
-
-        if (!isNaN(gdp) && !isNaN(lifeExpectancy) && gdp > 0 && lifeExpectancy > 0) {
-            if (!countryDataMap.has(countryName)) {
-                countryDataMap.set(countryName, { gdpSum: 0, lifeExpectancySum: 0, count: 0 });
-            }
-            const countryData = countryDataMap.get(countryName);
-            countryData.gdpSum += gdp;
-            countryData.lifeExpectancySum += lifeExpectancy;
-            countryData.count += 1;
-            countryDataMap.set(countryName, countryData);
-        }
+        d["GDP (current US$) [NY.GDP.MKTP.CD]"] = +d["GDP (current US$) [NY.GDP.MKTP.CD]"];
+        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
     });
 
-    // Compute the average values and determine min/max life expectancy for color scaling
-    const finalCountryDataMap = new Map();
-    const lifeExpectancyValues = [];
-    countryDataMap.forEach((value, key) => {
-        const avgGDP = value.gdpSum / value.count;
-        const avgLifeExpectancy = value.lifeExpectancySum / value.count;
-        if (avgLifeExpectancy > 0) {
-            finalCountryDataMap.set(key, { avgGDP, avgLifeExpectancy });
-            lifeExpectancyValues.push(avgLifeExpectancy);
-        }
-    });
+    // Compute average life expectancy and average GDP for each country
+    const countryDataMap = d3.rollup(data, v => {
+        const nonZeroLifeExpectancy = v.map(d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(val => val > 0);
+        const averageLifeExpectancy = nonZeroLifeExpectancy.length ? d3.mean(nonZeroLifeExpectancy) : 0;
+        const averageGDP = d3.mean(v.map(d => d["GDP (current US$) [NY.GDP.MKTP.CD]"]));
+        return { averageLifeExpectancy, averageGDP };
+    }, d => d["Country Name"]);
 
-    const minLifeExpectancy = d3.min(lifeExpectancyValues);
-    const maxLifeExpectancy = d3.max(lifeExpectancyValues);
-    console.log("Min Life Expectancy:", minLifeExpectancy);
-    console.log("Max Life Expectancy:", maxLifeExpectancy);
+    const values = [...countryDataMap.values()];
+    const minLifeExpectancy = d3.min(values.filter(v => v.averageLifeExpectancy > 0), d => d.averageLifeExpectancy);
+    const maxLifeExpectancy = d3.max(values, d => d.averageLifeExpectancy);
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
-    // Load world map data
-    d3.json("data/world-map.topojson").then(world => {
-        console.log("World TopoJSON Data:", world); // Add a log to verify data
-        const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
-        console.log("Loaded Countries:", countries);
+    // Scale and axis for GDP and life expectancy
+    const xScale = d3.scaleLog()
+        .domain([d3.min(values, d => d.averageGDP), d3.max(values, d => d.averageGDP)])
+        .range([50, width - 50]);
 
-        // Add scatter plot points
-        svg.selectAll("circle")
-            .data(countries)
-            .enter().append("circle")
-            .attr("cx", d => projection([d.properties.longitude, d.properties.latitude])[0])
-            .attr("cy", d => projection([d.properties.longitude, d.properties.latitude])[1])
-            .attr("r", 5)
-            .attr("fill", d => {
-                const countryName = d.properties.NAME;
-                const data = finalCountryDataMap.get(countryName);
-                const color = data && data.avgLifeExpectancy > 0 ? colorScale(data.avgLifeExpectancy) : "#000";
-                return color;
-            })
-            .on("mouseover", function(event, d) {
-                const countryName = d.properties.NAME;
-                const data = finalCountryDataMap.get(countryName);
-                d3.select("#tooltip")
-                    .style("display", "block")
-                    .style("left", (event.pageX + 5) + "px")
-                    .style("top", (event.pageY - 28) + "px")
-                    .html(`<strong>${countryName}</strong><br>GDP: ${data ? data.avgGDP.toFixed(2) : 'N/A'}<br>Life Expectancy: ${data ? data.avgLifeExpectancy.toFixed(2) : 'N/A'}`);
-            })
-            .on("mouseout", function() {
-                d3.select("#tooltip").style("display", "none");
-            });
+    const yScale = d3.scaleLinear()
+        .domain([0, d3.max(values, d => d.averageLifeExpectancy)])
+        .range([height - 50, 50]);
 
-        // Create the color legend
-        const legendWidth = 60;
-        const legendHeight = height / 1.5;
-        const legend = d3.select("#legend").append("svg")
-            .attr("width", legendWidth)
-            .attr("height", legendHeight);
+    // Add scatter plot dots
+    svg.selectAll("circle")
+        .data(values)
+        .enter().append("circle")
+        .attr("cx", d => xScale(d.averageGDP))
+        .attr("cy", d => yScale(d.averageLifeExpectancy))
+        .attr("r", 5)
+        .attr("fill", d => d.averageLifeExpectancy > 0 ? colorScale(d.averageLifeExpectancy) : "#000")
+        .on("mouseover", function(event, d) {
+            const countryName = data.find(d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] === d.averageLifeExpectancy).CountryName;
+            d3.select("#tooltip")
+                .style("display", "block")
+                .style("left", (event.pageX + 5) + "px")
+                .style("top", (event.pageY - 28) + "px")
+                .html(`<strong>${countryName}</strong><br>GDP: $${d.averageGDP.toLocaleString()}<br>Life Expectancy: ${d.averageLifeExpectancy}`);
+        })
+        .on("mouseout", function() {
+            d3.select("#tooltip").style("display", "none");
+        });
 
-        const legendScale = d3.scaleLinear()
-            .domain([minLifeExpectancy, maxLifeExpectancy])
-            .range([legendHeight, 0]);
+    // Add axes
+    svg.append("g")
+        .attr("transform", `translate(0, ${height - 50})`)
+        .call(d3.axisBottom(xScale).tickFormat(d3.format(".0s")).ticks(5))
+        .append("text")
+        .attr("x", width - 50)
+        .attr("y", 30)
+        .attr("fill", "#000")
+        .attr("text-anchor", "end")
+        .text("GDP (current US$)");
 
-        const legendAxis = d3.axisRight(legendScale)
-            .ticks(10)
-            .tickSize(5);
+    svg.append("g")
+        .attr("transform", `translate(50, 0)`)
+        .call(d3.axisLeft(yScale))
+        .append("text")
+        .attr("x", -30)
+        .attr("y", 10)
+        .attr("fill", "#000")
+        .attr("text-anchor", "end")
+        .text("Life Expectancy at Birth (years)");
 
-        legend.append("g")
-            .attr("transform", `translate(${legendWidth - 10}, 0)`)
-            .call(legendAxis);
+    // Add legend for life expectancy
+    const legendWidth = 60;
+    const legendHeight = height / 2;
+    const legend = d3.select("#legend").append("svg")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight);
 
-        const numBlocks = 10;
-        const blockHeight = legendHeight / numBlocks;
-        legend.selectAll("rect")
-            .data(d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks))
-            .enter().append("rect")
-            .attr("x", 0)
-            .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
-            .attr("width", legendWidth - 5)
-            .attr("height", blockHeight)
-            .style("fill", d => colorScale(d));
+    const legendScale = d3.scaleLinear()
+        .domain([minLifeExpectancy, maxLifeExpectancy])
+        .range([legendHeight, 0]);
 
-        legend.append("text")
-            .attr("x", legendWidth + 5)
-            .attr("y", 20)
-            .attr("text-anchor", "start")
-            .attr("font-size", "12px")
-            .text("Max: " + maxLifeExpectancy);
+    const legendAxis = d3.axisRight(legendScale)
+        .ticks(10)
+        .tickSize(5);
 
-        legend.append("text")
-            .attr("x", legendWidth + 5)
-            .attr("y", legendHeight - 5)
-            .attr("text-anchor", "start")
-            .attr("font-size", "12px")
-            .text("Min: " + minLifeExpectancy);
+    legend.append("g")
+        .attr("transform", `translate(${legendWidth - 10}, 0)`)
+        .call(legendAxis);
 
-        // Annotations
-        const annotations = [
-            {
-                note: { label: "Countries with higher GDP generally have higher life expectancy. See how various countries compare.", title: "GDP vs Life Expectancy" },
-                x: width / 2, y: height / 2, dy: 37, dx: 62
-            }
-        ];
+    // Create color blocks for the legend
+    const numBlocks = 10;
+    const blockHeight = legendHeight / numBlocks;
+    legend.selectAll("rect")
+        .data(d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks))
+        .enter().append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
+        .attr("width", legendWidth - 5)
+        .attr("height", blockHeight)
+        .style("fill", d => colorScale(d));
 
-        const makeAnnotations = d3.annotation()
-            .type(d3.annotationLabel)
-            .annotations(annotations);
+    // Add max and min labels to the legend
+    legend.append("text")
+        .attr("x", legendWidth + 5)
+        .attr("y", 20)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Max: " + maxLifeExpectancy);
 
-        d3.select("#annotations")
-            .append("svg")
-            .attr("width", 200)
-            .attr("height", 500)
-            .call(makeAnnotations)
-            .selectAll(".annotation-connector")
-            .style("display", "none")
-            .selectAll(".annotation-note")
-            .style("stroke", "none")
-            .style("fill", "none");
+    legend.append("text")
+        .attr("x", legendWidth + 5)
+        .attr("y", legendHeight - 5)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Min: " + minLifeExpectancy);
 
-        // Create and add the axes for the scatter plot
-        const xAxisScale = d3.scaleLog()
-            .domain([d3.min([...finalCountryDataMap.values()].map(d => d.avgGDP)), d3.max([...finalCountryDataMap.values()].map(d => d.avgGDP))])
-            .range([0, width]);
+    // Annotations
+    const annotations = [
+        {
+            note: { label: "Explore the relationship between GDP and Life Expectancy. Click next to proceed to the next scene.", title: "GDP vs Life Expectancy" },
+            x: width / 2, y: height / 2, dy: -50, dx: -100
+        }
+    ];
 
-        const yAxisScale = d3.scaleLinear()
-            .domain([d3.min(lifeExpectancyValues), d3.max(lifeExpectancyValues)])
-            .range([height, 0]);
+    const makeAnnotations = d3.annotation()
+        .type(d3.annotationLabel)
+        .annotations(annotations);
 
-        const xAxis = d3.axisBottom(xAxisScale).ticks(10, ",.0s");
-        const yAxis = d3.axisLeft(yAxisScale).ticks(10);
-
-        svg.append("g")
-            .attr("transform", `translate(0,${height})`)
-            .call(xAxis)
-            .append("text")
-            .attr("fill", "#000")
-            .attr("x", width - 10)
-            .attr("y", -6)
-            .attr("text-anchor", "end")
-            .text("GDP (current US$)");
-
-        svg.append("g")
-            .call(yAxis)
-            .append("text")
-            .attr("fill", "#000")
-            .attr("x", 10)
-            .attr("y", 6)
-            .attr("dy", "0.71em")
-            .attr("text-anchor", "start")
-            .text("Life Expectancy (years)");
-    }).catch(error => {
-        console.error('Error loading or processing TopoJSON data:', error);
-    });
-
-    // Handle window resize to adjust the projection
-    window.addEventListener('resize', () => {
-        const newWidth = svg.node().parentNode.clientWidth;
-        const newHeight = svg.node().parentNode.clientHeight;
-        svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
-    });
+    d3.select("#annotations")
+        .append("svg")
+        .attr("width", 200)
+        .attr("height", 500)
+        .call(makeAnnotations)
+        .selectAll(".annotation-connector") // Remove connector lines
+        .style("display", "none")
+        .selectAll(".annotation-note")
+        .style("stroke", "none") // Ensure no stroke
+        .style("fill", "none"); // Ensure no fill
 }
 
 // Load data and initialize the visualization
 d3.csv("data/lifeExpectancy.csv").then(data => {
-    console.log("CSV Data Loaded:", data); // Add a log to verify data loading
+    console.log("CSV Data Loaded:", data);
     createScene2(data);
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
