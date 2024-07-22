@@ -153,8 +153,9 @@ function createScene1(data) {
             .append("svg")
             .attr("width", 200)
             .attr("height", 500)
-            .call(makeAnnotations);
-
+            .call(makeAnnotations)
+            .selectAll(".annotation-note")
+            .style("stroke", "none"); // Remove lines from annotations
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
