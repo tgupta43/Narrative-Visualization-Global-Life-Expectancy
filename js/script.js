@@ -7,9 +7,7 @@ function createScene1(data) {
         .attr("width", width)
         .attr("height", height);
 
-    const projection = d3.geoMercator()
-        .scale(100) // Adjust scale for proper fit
-        .translate([width / 2, height / 1.5]); // Adjust translation to move map down
+    const projection = d3.geoMercator();
 
     const path = d3.geoPath().projection(projection);
 
@@ -23,6 +21,15 @@ function createScene1(data) {
         console.log("World TopoJSON Data:", world); // Add a log to verify data
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
+
+        // Calculate bounds and center the map
+        const b = path.bounds(topojson.feature(world, world.objects.ne_10m_admin_0_countries)),
+            s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height),
+            t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+
+        projection
+            .scale(s)
+            .translate(t);
 
         svg.selectAll("path")
             .data(countries)
