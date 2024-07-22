@@ -1,4 +1,4 @@
-//js/script.js
+// js/script.js
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Log data for debugging
 
@@ -38,34 +38,7 @@ function createScene1(data) {
 
         // Clear any existing paths
         svg.selectAll("path").remove();
-        svg.append("rect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", width)
-            .attr("height", height)
-            .attr("fill", "lightgray");
         
-        svg.append("path")
-            .attr("d", "M0,0L100,0L100,100L0,100Z")
-            .attr("fill", "red");
-
-        const testFeature = {
-            type: "Feature",
-            geometry: {
-                type: "Polygon",
-                coordinates: [[
-                    [-10, 50], [10, 50], [10, 60], [-10, 60], [-10, 50]
-                ]]
-            },
-            properties: {}
-        };
-        
-        svg.append("path")
-            .data(testFeature)
-            .attr("d", path)
-            .attr("fill", "lightblue")
-            .attr("stroke", "#fff");
-
         // Render map paths
         svg.selectAll("path")
             .data(countries)
@@ -131,4 +104,7 @@ function loadAndCreate() {
 loadAndCreate();
 
 // Handle window resize
-window.addEventListener("resize", loadAndCreate);
+window.addEventListener("resize", () => {
+    d3.select("#visualization").select("svg").selectAll("*").remove(); // Clear existing content
+    loadAndCreate(); // Reload and recreate visualization
+});
