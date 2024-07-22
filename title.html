@@ -3,33 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Life Expectancy Visualization</title>
+    <title>Global Life Expectancy and its Factors</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #title-container {
             text-align: center;
         }
-        #title-page {
-            padding: 20px;
-        }
-        #title-page h1 {
+        #title {
             font-size: 36px;
-            margin-bottom: 10px;
+            font-weight: bold;
         }
-        #title-page h2 {
-            font-size: 20px;
-            margin-bottom: 30px;
+        #subtitle {
+            font-size: 18px;
+            margin-top: 10px;
         }
         #navigation {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
+            margin-top: 30px;
         }
         #navigation button {
             font-size: 16px;
@@ -39,13 +36,12 @@
     </style>
 </head>
 <body>
-    <div id="title-page">
-        <h1>Global Life Expectancy and its Factors</h1>
-        <h2>Ever wondered whether different geographical locations have different life expectancies? We are all biologically human, so why would we have different life spans? Let's explore the Life expectancies around the world and possible factors.</h2>
+    <div id="title-container">
+        <div id="title">Global Life Expectancy and its Factors</div>
+        <div id="subtitle">Ever wondered whether different geographical locations have different life expectancies? We are all biologically human, so why would we have different life spans? Let's explore the Life expectancies around the world and possible factors.</div>
+        <div id="navigation">
+            <button id="next-btn" onclick="window.location.href='index.html'">Next</button>
+        </div>
     </div>
-    <div id="navigation">
-        <button id="next-btn">Next</button>
-    </div>
-    <script src="js/title.js"></script>
 </body>
 </html>
