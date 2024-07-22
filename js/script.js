@@ -29,7 +29,7 @@ function createScene1(data) {
         const x = (bounds[0][0] + bounds[1][0]) / 2;
         const y = (bounds[0][1] + bounds[1][1]) / 2;
         const scale = Math.min(width / dx, height / dy) * 0.9;
-        const translate = [width / 2 - scale * x, height / 2 - scale * y];
+        const translate = [width - scale * x, height  - scale * y];
 
         // Log bounding box and scaling information
         console.log("Bounds:", bounds);
@@ -42,7 +42,7 @@ function createScene1(data) {
         projection.scale(scale).translate(translate);
 
         // Clear any existing paths
-        svg.selectAll("path").remove();
+       // svg.selectAll("path").remove();
 
         // Render map paths
         svg.selectAll("path")
