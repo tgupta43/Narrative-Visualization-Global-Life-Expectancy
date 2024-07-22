@@ -1,3 +1,4 @@
+//js/script.js
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Log data for debugging
 
@@ -37,7 +38,12 @@ function createScene1(data) {
 
         // Clear any existing paths
         svg.selectAll("path").remove();
-
+        svg.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", width)
+            .attr("height", height)
+            .attr("fill", "lightgray");
         // Render map paths
         svg.selectAll("path")
             .data(countries)
