@@ -47,6 +47,17 @@
             text-align: right;
             font-size: 12px;
         }
+        /* Tooltip styles */
+        #tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            display: none;
+            pointer-events: none; /* Prevents the tooltip from interfering with mouse events */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -56,6 +67,8 @@
         </div>
         <div class="legend" id="legend"></div>
     </div>
+    <!-- Tooltip Element -->
+    <div id="tooltip"></div>
     <script src="js/script.js"></script>
 </body>
 </html>
