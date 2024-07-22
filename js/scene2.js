@@ -79,11 +79,15 @@ function createScene2(data) {
         .attr("r", 5)
         .attr("fill", d => d.averageLifeExpectancy > 0 ? colorScale(d.averageLifeExpectancy) : "#000")
         .on("mouseover", function(event, d) {
+            const countryName = d.countryName || "Unknown";
+            const gdpFormatted = d.averageGDP !== undefined ? `$${d.averageGDP.toLocaleString()}` : "N/A";
+            const lifeExpectancyFormatted = d.averageLifeExpectancy !== undefined ? `${d.averageLifeExpectancy} yr` : "N/A";
+            
             d3.select("#tooltip")
                 .style("display", "block")
                 .style("left", (event.pageX + 5) + "px")
                 .style("top", (event.pageY - 28) + "px")
-                .html(`<strong>${d.countryName}</strong><br>GDP: $${d.averageGDP.toLocaleString()}<br>Life Expectancy: ${d.averageLifeExpectancy} yr`);
+                .html(`<strong>${countryName}</strong><br>GDP: ${gdpFormatted}<br>Life Expectancy: ${lifeExpectancyFormatted}`);
         })
         .on("mouseout", function() {
             d3.select("#tooltip").style("display", "none");
