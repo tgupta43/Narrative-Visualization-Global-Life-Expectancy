@@ -1,3 +1,4 @@
+//js/script.js
 // Function to create the visualization
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
