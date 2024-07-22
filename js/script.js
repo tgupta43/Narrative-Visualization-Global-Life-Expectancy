@@ -102,13 +102,16 @@ function createScene1(data) {
             .attr("transform", `translate(${legendWidth - 10}, 0)`)
             .call(legendAxis);
 
+        // Create color blocks for the legend
+        const numBlocks = 10;
+        const blockHeight = legendHeight / numBlocks;
         legend.selectAll("rect")
-            .data(d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / 10))
+            .data(d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks))
             .enter().append("rect")
             .attr("x", 0)
-            .attr("y", d => legendHeight - (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
+            .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
             .attr("width", legendWidth - 5)
-            .attr("height", (d, i) => i === 0 ? 0 : (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight - (d - (maxLifeExpectancy - minLifeExpectancy) / 10) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
+            .attr("height", blockHeight)
             .style("fill", d => colorScale(d));
 
         // Add max and min labels to the legend
