@@ -31,6 +31,11 @@ function createScene1(data) {
         const y = (bounds[0][1] + bounds[1][1]) / 2;
         const scale = Math.min(width / dx, height / dy) * 0.9; // Adjust scale to fit the container
         const translate = [width / 2 - scale * x, height / 2 - scale * y];
+        console.log("Bounds:", bounds);
+        console.log("Bounding Box Dimensions:", { dx, dy });
+        console.log("Center Coordinates:", { x, y });
+        console.log("Scale:", scale);
+        console.log("Translate:", translate);
 
         projection
             .scale(scale)
