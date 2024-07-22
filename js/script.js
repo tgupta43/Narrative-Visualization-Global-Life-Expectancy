@@ -1,4 +1,3 @@
-// js/script.js
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Log data for debugging
 
@@ -23,28 +22,38 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
-        // Compute bounds and adjust projection
+        // Compute bounds and log them
         const bounds = path.bounds({type: "FeatureCollection", features: countries});
-        const dx = bounds[1][0] - bounds[0][0];
-        const dy = bounds[1][1] - bounds[0][1];
-        const x = (bounds[0][0] + bounds[1][0]) / 2;
-        const y = (bounds[0][1] + bounds[1][1]) / 2;
-        const scale = Math.min(width / dx, height / dy) * 0.9; // Adjust scale to fit the container
+        const [[x0, y0], [x1, y1]] = bounds;
+        const dx = x1 - x0;
+        const dy = y1 - y0;
+        const x = (x0 + x1) / 2;
+        const y = (y0 + y1) / 2;
+        const scale = Math.min(width / dx, height / dy) * 0.9;
         const translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+        // Log bounding box and scaling information
         console.log("Bounds:", bounds);
         console.log("Bounding Box Dimensions:", { dx, dy });
         console.log("Center Coordinates:", { x, y });
         console.log("Scale:", scale);
         console.log("Translate:", translate);
 
-        projection
-            .scale(scale)
-            .translate(translate);
+        // Draw bounding box for verification
+        svg.append("rect")
+            .attr("x", x0)
+            .attr("y", y0)
+            .attr("width", dx)
+            .attr("height", dy)
+            .attr("fill", "none")
+            .attr("stroke", "red")
+            .attr("stroke-width", 2);
 
-        // Clear any existing paths
+        // Apply scaling and translation
+        projection.scale(scale).translate(translate);
+
+        // Clear and render map paths
         svg.selectAll("path").remove();
-        
-        // Render map paths
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
@@ -55,7 +64,7 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
-        // Render annotations
+        // Render annotations and title
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -77,7 +86,6 @@ function createScene1(data) {
         svg.append("g")
             .call(makeAnnotations);
 
-        // Add title
         svg.append("text")
             .attr("x", width / 2)
             .attr("y", 40)
@@ -109,7 +117,4 @@ function loadAndCreate() {
 loadAndCreate();
 
 // Handle window resize
-window.addEventListener("resize", () => {
-    d3.select("#visualization").select("svg").selectAll("*").remove(); // Clear existing content
-    loadAndCreate(); // Reload and recreate visualization
-});
+window.addEventListener("resize", loadAndCreate);
