@@ -1,5 +1,5 @@
 function createScene1(data) {
-    console.log("Data for Scene 1:", data); // Add a log to verify data
+    console.log("Data for Scene 1:", data); // Log data for debugging
 
     const svg = d3.select("#visualization").select("svg");
     const width = svg.node().clientWidth;
@@ -17,7 +17,8 @@ function createScene1(data) {
         .domain([0, maxLifeExpectancy || 100]);
 
     d3.json("data/world-map.topojson").then(world => {
-        console.log("World TopoJSON Data:", world); // Add a log to verify data
+        console.log("World TopoJSON Data:", world); // Log TopoJSON data
+
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
@@ -34,8 +35,10 @@ function createScene1(data) {
             .scale(scale)
             .translate(translate);
 
-        svg.selectAll("path").remove(); // Clear existing paths
+        // Clear any existing paths
+        svg.selectAll("path").remove();
 
+        // Render map paths
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
@@ -46,6 +49,7 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
+        // Render annotations
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -67,6 +71,7 @@ function createScene1(data) {
         svg.append("g")
             .call(makeAnnotations);
 
+        // Add title
         svg.append("text")
             .attr("x", width / 2)
             .attr("y", 40)
@@ -83,7 +88,7 @@ function createScene1(data) {
 // Load data and initialize the visualization
 function loadAndCreate() {
     d3.csv("data/lifeExpectancy.csv").then(data => {
-        console.log("CSV Data Loaded:", data); // Add a log to verify data loading
+        console.log("CSV Data Loaded:", data); // Log CSV data for debugging
         data.forEach(d => {
             d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
         });
