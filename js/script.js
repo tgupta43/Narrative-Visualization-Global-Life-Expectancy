@@ -16,25 +16,29 @@ function createScene1(data) {
     const path = d3.geoPath().projection(projection);
 
     // Calculate max life expectancy
-    const maxLifeExpectancy = d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
+    const maxLifeExpectancy = d3.max(data, d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([0, maxLifeExpectancy || 100]);
 
-    // Create a map from country names to life expectancy values
+    // Create a map from country names to averaged life expectancy values
     const countryDataMap = new Map();
+
     data.forEach(d => {
-        const countryName = d["Country Name"];
-        const lifeExpectancy = d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-        if (countryDataMap.has(countryName)) {
-            const currentData = countryDataMap.get(countryName);
-            const count = currentData.count + 1;
-            const average = (currentData.sum + lifeExpectancy) / count;
-            countryDataMap.set(countryName, { sum: average * count, count: count });
-        } else {
-            countryDataMap.set(countryName, { sum: lifeExpectancy, count: 1 });
+        const countryName = d["Country Name"].trim();
+        const lifeExpectancy = parseFloat(d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
+
+        if (!isNaN(lifeExpectancy)) {
+            if (countryDataMap.has(countryName)) {
+                const currentData = countryDataMap.get(countryName);
+                const count = currentData.count + 1;
+                const average = (currentData.sum + lifeExpectancy) / count;
+                countryDataMap.set(countryName, { sum: average * count, count: count });
+            } else {
+                countryDataMap.set(countryName, { sum: lifeExpectancy, count: 1 });
+            }
         }
     });
 
@@ -43,6 +47,8 @@ function createScene1(data) {
     countryDataMap.forEach((value, key) => {
         finalCountryDataMap.set(key, value.sum / value.count);
     });
+
+    console.log("Final Country Data Map:", [...finalCountryDataMap.entries()]); // Log the map for verification
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
@@ -80,8 +86,7 @@ function createScene1(data) {
             });
 
         // Define and add annotations
-        // Removing the previous annotation
-        const annotations = [];
+        const annotations = []; // Removed previous annotation
 
         const makeAnnotations = d3.annotation()
             .annotations(annotations);
@@ -148,10 +153,6 @@ function createScene1(data) {
 // Load data and initialize the visualization
 d3.csv("data/lifeExpectancy.csv").then(data => {
     console.log("CSV Data Loaded:", data); // Add a log to verify data loading
-    data.forEach(d => {
-        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-    });
-
     createScene1(data);
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
