@@ -21,6 +21,7 @@
         #visualization {
             width: 80vw;
             height: 80vh;
+            position: relative; /* Ensure SVG is positioned relative to this container */
         }
         /* Tooltip styles */
         #tooltip {
@@ -55,16 +56,28 @@
         #navigation button:hover {
             background-color: #0056b3;
         }
+        /* Legend styles */
+        #legend {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px; /* Adjust as needed */
+            height: 300px; /* Adjust as needed */
+        }
     </style>
 </head>
 <body>
-    <div id="visualization"></div>
+    <div id="visualization">
+        <!-- The SVG for the scatter plot will be appended here by the script -->
+    </div>
     <div id="navigation">
         <button id="prev-btn" onclick="location.href='index.html'">Previous</button>
         <button id="next-btn" onclick="location.href='scene3.html'">Next</button>
     </div>
     <!-- Tooltip Element -->
     <div id="tooltip"></div>
+    <!-- Legend Element -->
+    <div id="legend"></div>
     <script src="js/scene2.js"></script>
 </body>
 </html>
