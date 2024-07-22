@@ -15,12 +15,15 @@ function createScene1(data) {
 
     const path = d3.geoPath().projection(projection);
 
-    // Calculate max life expectancy
-    const maxLifeExpectancy = d3.max(data, d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
-    console.log("Max Life Expectancy:", maxLifeExpectancy);
-
     // Define cutoff value
     const cutoff = 40;
+
+    // Calculate max life expectancy
+    const maxLifeExpectancy = d3.max(data, d => {
+        const lifeExpectancy = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
+        return (lifeExpectancy >= cutoff) ? lifeExpectancy : cutoff;
+    });
+    console.log("Max Life Expectancy:", maxLifeExpectancy);
 
     // Color scale for life expectancy with black for below cutoff
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
