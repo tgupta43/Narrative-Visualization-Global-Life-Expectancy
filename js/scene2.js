@@ -1,22 +1,17 @@
-// Function to create the visualization
-function createScene2(data) {
-    // Log the data for debugging
-    console.log("Data for Scene 2:", data);
+// Scene 2 JavaScript
 
-    const width = 960, height = 500;
+// Function to create the scatter plot visualization
+function createScene2(data) {
+    console.log("Data for Scene 2:", data); // Add a log to verify data
+
+    const width = 960, height = 500; // Set to standard dimensions
     const svg = d3.select("#visualization").append("svg")
         .attr("width", "100%")
         .attr("height", "100%")
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
-    // Parse the CSV data
-    data.forEach(d => {
-        d["GDP (current US$) [NY.GDP.MKTP.CD]"] = +d["GDP (current US$) [NY.GDP.MKTP.CD]"];
-        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-    });
-
-    // Compute average life expectancy and average GDP for each country
+    // Create a map from country names to averaged GDP and life expectancy values
     const countryDataMap = d3.rollup(data, v => {
         const nonZeroLifeExpectancy = v.map(d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(val => val > 0);
         const averageLifeExpectancy = nonZeroLifeExpectancy.length ? d3.mean(nonZeroLifeExpectancy) : 0;
@@ -24,33 +19,50 @@ function createScene2(data) {
         return { averageLifeExpectancy, averageGDP };
     }, d => d["Country Name"]);
 
+    console.log("Country Data Map:", countryDataMap); // Log to verify calculations
+
     const values = [...countryDataMap.values()];
-    const minLifeExpectancy = d3.min(values.filter(v => v.averageLifeExpectancy > 0), d => d.averageLifeExpectancy);
+    const minLifeExpectancy = d3.min(values, d => d.averageLifeExpectancy);
     const maxLifeExpectancy = d3.max(values, d => d.averageLifeExpectancy);
+    const minGDP = d3.min(values, d => d.averageGDP);
+    const maxGDP = d3.max(values, d => d.averageGDP);
+
+    console.log("Min Life Expectancy:", minLifeExpectancy);
+    console.log("Max Life Expectancy:", maxLifeExpectancy);
+    console.log("Min GDP:", minGDP);
+    console.log("Max GDP:", maxGDP);
 
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
-    // Scale and axis for GDP and life expectancy
+    // Define scales and axes
     const xScale = d3.scaleLog()
-        .domain([d3.min(values, d => d.averageGDP), d3.max(values, d => d.averageGDP)])
+        .domain([minGDP, maxGDP])
         .range([50, width - 50]);
 
     const yScale = d3.scaleLinear()
-        .domain([0, d3.max(values, d => d.averageLifeExpectancy)])
+        .domain([0, maxLifeExpectancy])
         .range([height - 50, 50]);
 
     // Add scatter plot dots
     svg.selectAll("circle")
         .data(values)
         .enter().append("circle")
-        .attr("cx", d => xScale(d.averageGDP))
-        .attr("cy", d => yScale(d.averageLifeExpectancy))
+        .attr("cx", d => {
+            const x = xScale(d.averageGDP);
+            console.log(`GDP: ${d.averageGDP}, x: ${x}`); // Log to debug
+            return isNaN(x) ? 0 : x; // Fallback if x is NaN
+        })
+        .attr("cy", d => {
+            const y = yScale(d.averageLifeExpectancy);
+            console.log(`Life Expectancy: ${d.averageLifeExpectancy}, y: ${y}`); // Log to debug
+            return isNaN(y) ? 0 : y; // Fallback if y is NaN
+        })
         .attr("r", 5)
         .attr("fill", d => d.averageLifeExpectancy > 0 ? colorScale(d.averageLifeExpectancy) : "#000")
         .on("mouseover", function(event, d) {
-            const countryName = data.find(d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] === d.averageLifeExpectancy).CountryName;
+            const countryName = data.find(entry => entry["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] === d.averageLifeExpectancy).CountryName;
             d3.select("#tooltip")
                 .style("display", "block")
                 .style("left", (event.pageX + 5) + "px")
@@ -61,7 +73,7 @@ function createScene2(data) {
             d3.select("#tooltip").style("display", "none");
         });
 
-    // Add axes
+    // Add x and y axes
     svg.append("g")
         .attr("transform", `translate(0, ${height - 50})`)
         .call(d3.axisBottom(xScale).tickFormat(d3.format(".0s")).ticks(5))
@@ -127,34 +139,11 @@ function createScene2(data) {
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
         .text("Min: " + minLifeExpectancy);
-
-    // Annotations
-    const annotations = [
-        {
-            note: { label: "Explore the relationship between GDP and Life Expectancy. Click next to proceed to the next scene.", title: "GDP vs Life Expectancy" },
-            x: width / 2, y: height / 2, dy: -50, dx: -100
-        }
-    ];
-
-    const makeAnnotations = d3.annotation()
-        .type(d3.annotationLabel)
-        .annotations(annotations);
-
-    d3.select("#annotations")
-        .append("svg")
-        .attr("width", 200)
-        .attr("height", 500)
-        .call(makeAnnotations)
-        .selectAll(".annotation-connector") // Remove connector lines
-        .style("display", "none")
-        .selectAll(".annotation-note")
-        .style("stroke", "none") // Ensure no stroke
-        .style("fill", "none"); // Ensure no fill
 }
 
 // Load data and initialize the visualization
 d3.csv("data/lifeExpectancy.csv").then(data => {
-    console.log("CSV Data Loaded:", data);
+    console.log("CSV Data Loaded:", data); // Add a log to verify data loading
     createScene2(data);
 }).catch(error => {
     console.error('Error loading or processing CSV data:', error);
