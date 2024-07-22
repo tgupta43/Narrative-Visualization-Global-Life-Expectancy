@@ -29,7 +29,7 @@ function createScene1(data) {
         const x = (bounds[0][0] + bounds[1][0]) / 2;
         const y = (bounds[0][1] + bounds[1][1]) / 2;
         const scale = Math.min(width / dx, height / dy) * 0.9;
-        const translate = [width - scale * x, height  - scale * y];
+        const translate = [width /2, height/2];
 
         // Log bounding box and scaling information
         console.log("Bounds:", bounds);
