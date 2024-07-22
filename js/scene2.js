@@ -5,18 +5,11 @@ function createScene2(data) {
     console.log("Data for Scene 2:", data); // Add a log to verify data
 
     const width = 960, height = 500; // Set to standard dimensions
-    const margin = { top: 20, right: 20, bottom: 50, left: 50 };
-    const svgWidth = width - margin.left - margin.right;
-    const svgHeight = height - margin.top - margin.bottom;
-
     const svg = d3.select("#visualization").append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", "100%")
+        .attr("height", "100%")
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
-
-    const g = svg.append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Create a map from country names to averaged GDP and life expectancy values
     const countryDataMap = d3.rollup(data, v => {
@@ -43,29 +36,39 @@ function createScene2(data) {
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
-    // Define scales and axes
+    // Define a linear scale with custom transformation
     const xScale = d3.scaleLinear()
         .domain([minGDP, maxGDP])
-        .range([0, svgWidth]);
+        .range([50, width - 50]);
 
     const yScale = d3.scaleLinear()
         .domain([0, maxLifeExpectancy])
-        .range([svgHeight, 0]);
+        .range([height - 50, 50]);
+
+    // Custom logarithmic transformation function
+    function logTransform(x) {
+        return Math.log(x + 1); // Adding 1 to avoid log(0)
+    }
+
+    // Apply the transformation to the xScale domain
+    const xTransformedScale = d3.scaleLinear()
+        .domain([logTransform(minGDP), logTransform(maxGDP)])
+        .range([50, width - 50]);
 
     // Test xScale manually with hardcoded values
     const testValues = [minGDP, maxGDP, (minGDP + maxGDP) / 2];
     testValues.forEach(value => {
-        const x = xScale(value);
-        console.log(`Test value: ${value}, xScale result: ${x}`);
+        const x = xTransformedScale(logTransform(value));
+        console.log(`Test value: ${value}, xTransformedScale result: ${x}`);
     });
 
     // Add scatter plot dots
-    g.selectAll("circle")
+    svg.selectAll("circle")
         .data(values)
         .enter().append("circle")
         .attr("cx", d => {
-            const x = xScale(d.averageGDP);
-            console.log(`GDP: ${d.averageGDP}, xScale Domain: ${xScale.domain()}, x: ${x}`); // Log to debug
+            const x = xTransformedScale(logTransform(d.averageGDP));
+            console.log(`GDP: ${d.averageGDP}, xTransformedScale Domain: ${xTransformedScale.domain()}, x: ${x}`); // Log to debug
             return isNaN(x) ? 0 : x; // Fallback if x is NaN
         })
         .attr("cy", d => {
@@ -91,28 +94,29 @@ function createScene2(data) {
         });
 
     // Add x and y axes
-    g.append("g")
-        .attr("transform", `translate(0, ${svgHeight})`)
-        .call(d3.axisBottom(xScale).tickFormat(d3.format(".0s")).ticks(5))
+    svg.append("g")
+        .attr("transform", `translate(0, ${height - 50})`)
+        .call(d3.axisBottom(xTransformedScale).tickFormat(d3.format(".0s")).ticks(5))
         .append("text")
-        .attr("x", svgWidth)
-        .attr("y", 40)
+        .attr("x", width - 50)
+        .attr("y", 30)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
         .text("GDP (current US$)");
 
-    g.append("g")
+    svg.append("g")
+        .attr("transform", `translate(50, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
         .attr("x", -30)
-        .attr("y", -20)
+        .attr("y", 10)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
         .text("Life Expectancy at Birth (years)");
 
     // Add legend for life expectancy
     const legendWidth = 60;
-    const legendHeight = svgHeight / 2;
+    const legendHeight = height / 2;
     const legend = d3.select("#legend").append("svg")
         .attr("width", legendWidth)
         .attr("height", legendHeight);
