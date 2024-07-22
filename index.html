@@ -19,8 +19,8 @@
         }
         #visualization-container {
             display: grid;
-            grid-template-columns: auto 200px; /* Adjust column sizes */
-            gap: 14px; /* Space between map and legend */
+            grid-template-columns: 1fr 200px; /* Adjust column sizes */
+            gap: 10px; /* Reduce space between map and legend */
             align-items: start;
             width: 90vw; /* Adjust width of container */
             height: 80vh; /* Adjust height of container */
@@ -45,6 +45,7 @@
             justify-content: center;
             align-items: flex-start;
             padding: 10px; /* Add some padding around the legend */
+            overflow: visible; /* Ensure the legend is fully visible */
         }
         .legend-text {
             text-align: right;

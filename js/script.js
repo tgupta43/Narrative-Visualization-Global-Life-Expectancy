@@ -23,6 +23,12 @@ function createScene1(data) {
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([0, maxLifeExpectancy || 100]);
 
+    // Create a map from country names to life expectancy values
+    const countryDataMap = new Map();
+    data.forEach(d => {
+        countryDataMap.set(d.Country, d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
+    });
+
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
         console.log("World TopoJSON Data:", world); // Add a log to verify data
@@ -36,9 +42,9 @@ function createScene1(data) {
             .attr("d", path)
             .attr("fill", d => {
                 // Find life expectancy for each country
-                const countryData = data.find(item => item.Country === d.properties.name);
-                const lifeExpectancy = countryData ? countryData["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] : 0;
-                return colorScale(lifeExpectancy);
+                const countryName = d.properties.name;
+                const lifeExpectancy = countryDataMap.get(countryName);
+                return colorScale(lifeExpectancy || 0);
             })
             .attr("stroke", "#fff");
 
