@@ -2,12 +2,14 @@ function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
     const svg = d3.select("#visualization").select("svg");
-    const width = svg.node().getBoundingClientRect().width;
-    const height = svg.node().getBoundingClientRect().height;
+    const width = svg.node().clientWidth;
+    const height = svg.node().clientHeight;
 
+    // Set up projection and path
     const projection = d3.geoMercator();
     const path = d3.geoPath().projection(projection);
 
+    // Calculate max life expectancy for color scaling
     const maxLifeExpectancy = d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
 
@@ -19,13 +21,13 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
-        // Calculate bounds and set the projection
-        const bounds = path.bounds(topojson.feature(world, world.objects.ne_10m_admin_0_countries));
+        // Compute bounds and adjust projection
+        const bounds = path.bounds({type: "FeatureCollection", features: countries});
         const dx = bounds[1][0] - bounds[0][0];
         const dy = bounds[1][1] - bounds[0][1];
         const x = (bounds[0][0] + bounds[1][0]) / 2;
         const y = (bounds[0][1] + bounds[1][1]) / 2;
-        const scale = Math.min(width / dx, height / dy) * 0.9; // Adjust scale for a bit of margin
+        const scale = Math.min(width / dx, height / dy) * 0.9; // Adjust scale to fit the container
         const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
         projection
