@@ -1,44 +1,41 @@
+// js/script.js
+
 // Function to create the visualization
 function createScene1(data) {
+    console.log("Data for Scene 1:", data); // Add a log to verify data
+    
     const width = 960, height = 500; // Adjust if necessary
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height);
 
-    // Define the projection with adjusted scale and translation
     const projection = d3.geoMercator()
         .scale(150) // Adjust scale for proper fit
-        .translate([width , height ]); // Center the map within SVG
+        .translate([width / 2, height / 1.5]); // Center the map within SVG
 
     const path = d3.geoPath().projection(projection);
 
-    // Find the max life expectancy value to set the domain of the color scale
     const maxLifeExpectancy = d3.max(data, d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
 
-    // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([0, maxLifeExpectancy || 100]);
 
-    // Load world map data
     d3.json("data/world-map.topojson").then(world => {
+        console.log("World TopoJSON Data:", world); // Add a log to verify data
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
-        console.log("Loaded Countries:", countries.length);
+        console.log("Loaded Countries:", countries);
 
-        // Append paths for each country
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
             .attr("d", path)
             .attr("fill", (d, i) => {
-                // Assign a random life expectancy value for testing
                 const testLifeExpectancy = Math.random() * maxLifeExpectancy;
-                console.log(`Test Value for Country: ${d.id}, Test Life Expectancy: ${testLifeExpectancy}`);
                 return colorScale(testLifeExpectancy);
             })
             .attr("stroke", "#fff");
-
-        // Define and add annotations
+        
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -54,24 +51,33 @@ function createScene1(data) {
             }
         }];
 
-        // Create annotation object
         const makeAnnotations = d3.annotation()
             .annotations(annotations);
 
-        // Add annotations to the SVG
         svg.append("g")
             .call(makeAnnotations);
 
-        // Add a title
         svg.append("text")
             .attr("x", width / 2)
-            .attr("y", 40) // Position the title above the map
+            .attr("y", 40)
             .attr("text-anchor", "middle")
             .attr("font-size", "24px")
             .attr("font-weight", "bold")
             .text("Global Life Expectancy");
 
     }).catch(error => {
-        console.error('Error loading or processing data:', error);
+        console.error('Error loading or processing TopoJSON data:', error);
     });
 }
+
+// Load data and initialize the visualization
+d3.csv("data/lifeExpectancy.csv").then(data => {
+    console.log("CSV Data Loaded:", data); // Add a log to verify data loading
+    data.forEach(d => {
+        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
+    });
+
+    createScene1(data);
+}).catch(error => {
+    console.error('Error loading or processing CSV data:', error);
+});
