@@ -132,7 +132,7 @@ function createScene1(data) {
         // Annotations
         const annotations = [
             {
-                note: { label: "Notable differences between continents", title: "North America and Europe have higher life expectancies than the other continents. What can be the reason for this?" },
+                note: { label: "North America and Europe have higher life expectancies than the other continents. What can be the reason for this? Click next to explore.", title: "Notable Differences Between Continents" },
                 x: 50, y: 100, dy: 37, dx: 62
             }
         ];
