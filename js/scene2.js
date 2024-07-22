@@ -45,18 +45,24 @@ function createScene2(data) {
         .domain([0, maxLifeExpectancy])
         .range([height - 50, 50]);
 
+    // Debugging the scales
+    console.log("xScale Domain:", xScale.domain());
+    console.log("xScale Range:", xScale.range());
+    console.log("yScale Domain:", yScale.domain());
+    console.log("yScale Range:", yScale.range());
+
     // Add scatter plot dots
     svg.selectAll("circle")
         .data(values)
         .enter().append("circle")
         .attr("cx", d => {
             const x = xScale(d.averageGDP);
-            console.log(`GDP: ${d.averageGDP}, x: ${x}`); // Log to debug
+            console.log(`GDP: ${d.averageGDP}, xScale Domain: ${xScale.domain()}, x: ${x}`); // Log to debug
             return isNaN(x) ? 0 : x; // Fallback if x is NaN
         })
         .attr("cy", d => {
             const y = yScale(d.averageLifeExpectancy);
-            console.log(`Life Expectancy: ${d.averageLifeExpectancy}, y: ${y}`); // Log to debug
+            console.log(`Life Expectancy: ${d.averageLifeExpectancy}, yScale Domain: ${yScale.domain()}, y: ${y}`); // Log to debug
             return isNaN(y) ? 0 : y; // Fallback if y is NaN
         })
         .attr("r", 5)
