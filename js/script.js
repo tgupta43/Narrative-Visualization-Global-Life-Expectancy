@@ -2,7 +2,7 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
-    const width = 1260, height = 700; // Set initial dimensions
+    const width = 800, height = 600; // Adjust size for better fit
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height)
@@ -58,9 +58,8 @@ function createScene1(data) {
             .call(makeAnnotations);
 
         // Create the legend
-        const legendWidth = 20;
-        const legendHeight = 200;
-        const legendMargin = 10;
+        const legendWidth = 30;
+        const legendHeight = 300;
         const legend = d3.select("#legend").append("svg")
             .attr("width", legendWidth)
             .attr("height", legendHeight);
@@ -75,18 +74,17 @@ function createScene1(data) {
             .ticks(10);
 
         legend.append("g")
-            .attr("transform", `translate(${legendMargin}, 0)`)
+            .attr("transform", `translate(0, 0)`)
             .call(legendAxis);
 
         legend.selectAll("rect")
             .data(d3.range(0, maxLifeExpectancy || 100, (maxLifeExpectancy || 100) / 10))
             .enter().append("rect")
-            .attr("x", legendMargin - 10)
-            .attr("y", d => legendHeight - legendHeight * (d / (maxLifeExpectancy || 100)))
-            .attr("width", 10)
-            .attr("height", d => legendHeight * (d / (maxLifeExpectancy || 100)))
+            .attr("x", 0)
+            .attr("y", d => legendHeight - (d / (maxLifeExpectancy || 100)) * legendHeight)
+            .attr("width", legendWidth - 5)
+            .attr("height", (d, i) => i === 0 ? 0 : (d / (maxLifeExpectancy || 100)) * legendHeight - ((d - (maxLifeExpectancy || 100) / 10) / (maxLifeExpectancy || 100)) * legendHeight)
             .style("fill", d => colorScale(d));
-
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
