@@ -1,13 +1,10 @@
-// Function to create the visualization
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
-    
-    // Select the SVG element and get its dimensions
+
     const svg = d3.select("#visualization").select("svg");
     const width = svg.node().getBoundingClientRect().width;
     const height = svg.node().getBoundingClientRect().height;
 
-    // Set up the projection
     const projection = d3.geoMercator();
     const path = d3.geoPath().projection(projection);
 
@@ -22,13 +19,13 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
-        // Calculate bounds to center and scale the map
+        // Calculate bounds and set the projection
         const bounds = path.bounds(topojson.feature(world, world.objects.ne_10m_admin_0_countries));
         const dx = bounds[1][0] - bounds[0][0];
         const dy = bounds[1][1] - bounds[0][1];
         const x = (bounds[0][0] + bounds[1][0]) / 2;
         const y = (bounds[0][1] + bounds[1][1]) / 2;
-        const scale = 0.95 / Math.max(dx / width, dy / height);
+        const scale = Math.min(width / dx, height / dy) * 0.9; // Adjust scale for a bit of margin
         const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
         projection
@@ -41,7 +38,7 @@ function createScene1(data) {
             .data(countries)
             .enter().append("path")
             .attr("d", path)
-            .attr("fill", (d, i) => {
+            .attr("fill", d => {
                 const testLifeExpectancy = Math.random() * maxLifeExpectancy;
                 return colorScale(testLifeExpectancy);
             })
@@ -82,16 +79,20 @@ function createScene1(data) {
 }
 
 // Load data and initialize the visualization
-d3.csv("data/lifeExpectancy.csv").then(data => {
-    console.log("CSV Data Loaded:", data); // Add a log to verify data loading
-    data.forEach(d => {
-        d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-    });
+function loadAndCreate() {
+    d3.csv("data/lifeExpectancy.csv").then(data => {
+        console.log("CSV Data Loaded:", data); // Add a log to verify data loading
+        data.forEach(d => {
+            d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
+        });
 
-    createScene1(data);
-}).catch(error => {
-    console.error('Error loading or processing CSV data:', error);
-});
+        createScene1(data);
+    }).catch(error => {
+        console.error('Error loading or processing CSV data:', error);
+    });
+}
+
+loadAndCreate();
 
 // Adjust map on window resize
 window.addEventListener("resize", () => {
@@ -99,14 +100,6 @@ window.addEventListener("resize", () => {
     const svg = d3.select("#visualization").append("svg") // Create new SVG
         .attr("width", "100%")
         .attr("height", "100%");
-    
-    d3.csv("data/lifeExpectancy.csv").then(data => {
-        data.forEach(d => {
-            d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"] = +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"];
-        });
 
-        createScene1(data); // Re-create the map with updated dimensions
-    }).catch(error => {
-        console.error('Error loading or processing CSV data:', error);
-    });
+    loadAndCreate(); // Re-load data and re-create the map with updated dimensions
 });

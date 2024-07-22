@@ -1,4 +1,3 @@
-<!--index.html-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,28 +10,25 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent default scrollbars on the body */
         }
         #visualization {
-            display: flex;
-            justify-content: center; /* Horizontally center */
-            align-items: center;     /* Vertically center */
-            width: 100%;
-            height: 100vh;           /* Use full viewport height */
-            position: relative;      /* Relative positioning for absolute children */
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            overflow: auto; /* Add scrollbars if needed */
+            position: relative;
         }
         svg {
-            width: 100%;
-            height: auto;            /* Maintain aspect ratio */
+            display: block; /* Remove extra spacing */
         }
     </style>
 </head>
 <body>
-    <div id="visualization"></div>
+    <div id="visualization">
+        <svg></svg>
+    </div>
     <script src="js/script.js"></script>
 </body>
 </html>
