@@ -2,13 +2,14 @@
 function createScene1(data) {
     console.log("Data for Scene 1:", data); // Add a log to verify data
 
+    const initialWidth = 1260, initialHeight = 700;
     const svg = d3.select("#visualization").append("svg")
         .attr("preserveAspectRatio", "xMidYMid meet")
-        .attr("viewBox", "0 0 1260 700");
+        .attr("viewBox", `0 0 ${initialWidth} ${initialHeight}`);
 
     const projection = d3.geoMercator()
         .scale(100) // Adjust scale for proper fit
-        .translate([630, 350]); // Initial translation to center the map
+        .translate([initialWidth / 2, initialHeight / 1.5]); // Initial translation to center the map
 
     const path = d3.geoPath().projection(projection);
 
@@ -38,8 +39,8 @@ function createScene1(data) {
                 label: "Global average life expectancy has increased significantly.",
                 align: "left"
             },
-            x: 630, // Centered horizontally
-            y: 350, // Centered vertically
+            x: initialWidth / 2,
+            y: initialHeight / 2,
             dx: 10,
             dy: 50,
             subject: {
@@ -55,7 +56,7 @@ function createScene1(data) {
             .call(makeAnnotations);
 
         svg.append("text")
-            .attr("x", 630)
+            .attr("x", initialWidth / 2)
             .attr("y", 40)
             .attr("text-anchor", "middle")
             .attr("font-size", "24px")
@@ -68,9 +69,10 @@ function createScene1(data) {
 
     // Handle window resize to adjust the projection
     window.addEventListener('resize', () => {
-        const newWidth = document.getElementById('visualization').clientWidth;
-        const newHeight = document.getElementById('visualization').clientHeight;
-        projection.translate([newWidth / 2, newHeight / 2]);
+        const newWidth = svg.node().parentNode.clientWidth;
+        const newHeight = svg.node().parentNode.clientHeight;
+        svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
+        projection.translate([newWidth / 2, newHeight / 1.5]);
         svg.selectAll("path").attr("d", path);
     });
 }
