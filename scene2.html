@@ -3,17 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CO2 Emissions Over Time</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Scatter Plot: GDP vs Life Expectancy</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #scatterplot {
+            width: 80%;
+            height: 80%;
+        }
+        /* Tooltip styles */
+        #tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            display: none;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        /* Navigation buttons styles */
+        #navigation {
+            position: absolute; /* Positioning buttons at the bottom */
+            bottom: 20px;
+            width: 80vw; /* Match width of the visualization container */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        #navigation button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #navigation button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>CO2 Emissions Over Time</h1>
-        <div id="chart"></div>
-        <button id="scene3-button">Go to Scene 3: Sea Level Rise</button>
+    <div id="scatterplot"></div>
+    <!-- Tooltip Element -->
+    <div id="tooltip"></div>
+    <div id="navigation">
+        <button id="prev-btn" onclick="window.location.href='scene1.html'">Previous</button>
+        <button id="next-btn" onclick="window.location.href='scene3.html'">Next</button>
     </div>
-
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="js/scene2.js"></script>
 </body>
 </html>
