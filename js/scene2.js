@@ -13,9 +13,9 @@ function createScene2(data) {
 
     // Create a map from country names to averaged GDP and life expectancy values
     const countryDataMap = d3.rollup(data, v => {
-        const nonZeroLifeExpectancy = v.map(d => d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(val => val > 0);
+        const nonZeroLifeExpectancy = v.map(d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(val => val > 0);
         const averageLifeExpectancy = nonZeroLifeExpectancy.length ? d3.mean(nonZeroLifeExpectancy) : 0;
-        const averageGDP = d3.mean(v.map(d => d["GDP (current US$) [NY.GDP.MKTP.CD]"]));
+        const averageGDP = d3.mean(v.map(d => +d["GDP (current US$) [NY.GDP.MKTP.CD]"]));
         return { averageLifeExpectancy, averageGDP };
     }, d => d["Country Name"]);
 
@@ -45,11 +45,12 @@ function createScene2(data) {
         .domain([0, maxLifeExpectancy])
         .range([height - 50, 50]);
 
-    // Debugging the scales
-    console.log("xScale Domain:", xScale.domain());
-    console.log("xScale Range:", xScale.range());
-    console.log("yScale Domain:", yScale.domain());
-    console.log("yScale Range:", yScale.range());
+    // Test xScale manually with hardcoded values
+    const testValues = [minGDP, maxGDP, (minGDP + maxGDP) / 2];
+    testValues.forEach(value => {
+        const x = xScale(value);
+        console.log(`Test value: ${value}, xScale result: ${x}`);
+    });
 
     // Add scatter plot dots
     svg.selectAll("circle")
