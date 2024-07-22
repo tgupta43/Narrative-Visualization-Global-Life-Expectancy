@@ -59,6 +59,36 @@ function createScene1(data) {
 
         // No title appending here as title is in HTML
 
+        // Create the legend
+        const legendWidth = 20;
+        const legendHeight = 200;
+        const legendMargin = 10;
+        const legend = d3.select("#legend").append("svg")
+            .attr("width", legendWidth)
+            .attr("height", legendHeight);
+
+        const legendScale = d3.scaleSequential(d3.interpolateYlOrRd)
+            .domain([0, maxLifeExpectancy || 100]);
+
+        const legendAxis = d3.axisRight(d3.scaleLinear()
+            .domain([0, maxLifeExpectancy || 100])
+            .range([legendHeight, 0]))
+            .tickSize(5)
+            .ticks(10);
+
+        legend.append("g")
+            .attr("transform", `translate(${legendMargin}, 0)`)
+            .call(legendAxis);
+
+        legend.selectAll("rect")
+            .data(d3.range(0, maxLifeExpectancy || 100, (maxLifeExpectancy || 100) / 10))
+            .enter().append("rect")
+            .attr("x", legendMargin - 10)
+            .attr("y", d => legendHeight - legendHeight * (d / (maxLifeExpectancy || 100)))
+            .attr("width", 10)
+            .attr("height", d => legendHeight * (d / (maxLifeExpectancy || 100)))
+            .style("fill", d => colorScale(d));
+        
     }).catch(error => {
         console.error('Error loading or processing TopoJSON data:', error);
     });
