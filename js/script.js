@@ -26,7 +26,7 @@ function createScene1(data) {
     // Create a map from country names to life expectancy values
     const countryDataMap = new Map();
     data.forEach(d => {
-        countryDataMap.set(d.Country, d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
+        countryDataMap.set(d["Country Name"], d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]);
     });
 
     // Load world map data
@@ -42,7 +42,7 @@ function createScene1(data) {
             .attr("d", path)
             .attr("fill", d => {
                 // Find life expectancy for each country
-                const countryName = d.properties.name;
+                const countryName = d.properties.name; // Assuming `d.properties.name` is the country name
                 const lifeExpectancy = countryDataMap.get(countryName);
                 return colorScale(lifeExpectancy || 0);
             })
