@@ -56,8 +56,9 @@ function createScene1(data) {
             .call(makeAnnotations);
 
         svg.append("text")
+            .attr("id", "map-title") // Add an ID for easier selection in CSS
             .attr("x", initialWidth / 2)
-            .attr("y", 40)
+            .attr("y", 30) // Adjust y position for better visibility
             .attr("text-anchor", "middle")
             .attr("font-size", "24px")
             .attr("font-weight", "bold")
@@ -74,6 +75,7 @@ function createScene1(data) {
         svg.attr("viewBox", `0 0 ${newWidth} ${newHeight}`);
         projection.translate([newWidth / 2, newHeight / 1.5]);
         svg.selectAll("path").attr("d", path);
+        svg.select("#map-title").attr("x", newWidth / 2); // Adjust title position on resize
     });
 }
 
