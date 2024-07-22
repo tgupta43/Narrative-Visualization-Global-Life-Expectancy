@@ -15,18 +15,6 @@ function createScene1(data) {
 
     const path = d3.geoPath().projection(projection);
 
-    // Calculate min and max life expectancy
-    const lifeExpectancies = data.map(d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(value => !isNaN(value));
-    const minLifeExpectancy = d3.min(lifeExpectancies.filter(val => val > 0)) || 0; // Exclude zero
-    const maxLifeExpectancy = d3.max(lifeExpectancies) || 100;
-
-    console.log("Min Life Expectancy:", minLifeExpectancy);
-    console.log("Max Life Expectancy:", maxLifeExpectancy);
-
-    // Color scale for life expectancy
-    const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
-        .domain([minLifeExpectancy, maxLifeExpectancy]);
-
     // Create a map from country names to averaged life expectancy values
     const countryDataMap = new Map();
 
@@ -52,7 +40,16 @@ function createScene1(data) {
         finalCountryDataMap.set(key, value.sum / value.count);
     });
 
-    console.log("Final Country Data Map:", [...finalCountryDataMap.entries()]); // Log the map for verification
+    const values = [...finalCountryDataMap.values()];
+    const minLifeExpectancy = d3.min(values);
+    const maxLifeExpectancy = d3.max(values);
+
+    console.log("Min Life Expectancy:", minLifeExpectancy);
+    console.log("Max Life Expectancy:", maxLifeExpectancy);
+
+    // Color scale for life expectancy
+    const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
+        .domain([minLifeExpectancy, maxLifeExpectancy]);
 
     // Load world map data
     d3.json("data/world-map.topojson").then(world => {
@@ -70,9 +67,21 @@ function createScene1(data) {
                 const countryName = d.properties.NAME; // Using `NAME` property
                 const lifeExpectancy = finalCountryDataMap.get(countryName);
                 console.log(`Country: ${countryName}, Life Expectancy: ${lifeExpectancy}`); // Log for verification
-                return lifeExpectancy < minLifeExpectancy ? "black" : colorScale(lifeExpectancy);
+                return lifeExpectancy !== undefined ? colorScale(lifeExpectancy) : "#000"; // Fill with black if not found
             })
-            .attr("stroke", "#fff");
+            .attr("stroke", "#fff")
+            .on("mouseover", function(event, d) {
+                const countryName = d.properties.NAME;
+                const lifeExpectancy = finalCountryDataMap.get(countryName);
+                d3.select("#tooltip")
+                    .style("display", "block")
+                    .style("left", (event.pageX + 5) + "px")
+                    .style("top", (event.pageY - 28) + "px")
+                    .html(`<strong>${countryName}</strong><br>Life Expectancy: ${lifeExpectancy}`);
+            })
+            .on("mouseout", function() {
+                d3.select("#tooltip").style("display", "none");
+            });
 
         // Create the legend
         const legendWidth = 40;
@@ -99,7 +108,7 @@ function createScene1(data) {
             .attr("x", 0)
             .attr("y", d => legendHeight - (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
             .attr("width", legendWidth - 5)
-            .attr("height", (d, i) => i === 0 ? 0 : (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight - ((d - (maxLifeExpectancy - minLifeExpectancy) / 10) - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
+            .attr("height", (d, i) => i === 0 ? 0 : (d - minLifeExpectancy) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight - (d - (maxLifeExpectancy - minLifeExpectancy) / 10) / (maxLifeExpectancy - minLifeExpectancy) * legendHeight)
             .style("fill", d => colorScale(d));
 
         // Add max and min labels to the legend
