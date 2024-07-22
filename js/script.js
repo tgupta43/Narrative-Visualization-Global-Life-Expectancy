@@ -44,6 +44,11 @@ function createScene1(data) {
             .attr("width", width)
             .attr("height", height)
             .attr("fill", "lightgray");
+        
+        svg.append("path")
+            .attr("d", "M0,0L100,0L100,100L0,100Z")
+            .attr("fill", "red");
+
         // Render map paths
         svg.selectAll("path")
             .data(countries)
