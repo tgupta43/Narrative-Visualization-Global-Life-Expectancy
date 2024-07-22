@@ -22,13 +22,12 @@ function createScene1(data) {
         const countries = topojson.feature(world, world.objects.ne_10m_admin_0_countries).features;
         console.log("Loaded Countries:", countries);
 
-        // Compute bounds and log them
-        const bounds = path.bounds({type: "FeatureCollection", features: countries});
-        const [[x0, y0], [x1, y1]] = bounds;
-        const dx = x1 - x0;
-        const dy = y1 - y0;
-        const x = (x0 + x1) / 2;
-        const y = (y0 + y1) / 2;
+        // Compute bounds and adjust projection
+        const bounds = path.bounds({ type: "FeatureCollection", features: countries });
+        const dx = bounds[1][0] - bounds[0][0];
+        const dy = bounds[1][1] - bounds[0][1];
+        const x = (bounds[0][0] + bounds[1][0]) / 2;
+        const y = (bounds[0][1] + bounds[1][1]) / 2;
         const scale = Math.min(width / dx, height / dy) * 0.9;
         const translate = [width / 2 - scale * x, height / 2 - scale * y];
 
@@ -39,21 +38,13 @@ function createScene1(data) {
         console.log("Scale:", scale);
         console.log("Translate:", translate);
 
-        // Draw bounding box for verification
-        svg.append("rect")
-            .attr("x", x0)
-            .attr("y", y0)
-            .attr("width", dx)
-            .attr("height", dy)
-            .attr("fill", "none")
-            .attr("stroke", "red")
-            .attr("stroke-width", 2);
-
         // Apply scaling and translation
         projection.scale(scale).translate(translate);
 
-        // Clear and render map paths
+        // Clear any existing paths
         svg.selectAll("path").remove();
+
+        // Render map paths
         svg.selectAll("path")
             .data(countries)
             .enter().append("path")
@@ -64,7 +55,16 @@ function createScene1(data) {
             })
             .attr("stroke", "#fff");
 
-        // Render annotations and title
+        // Debug: Render a rectangle around the bounding box
+        svg.append("rect")
+            .attr("x", bounds[0][0])
+            .attr("y", bounds[0][1])
+            .attr("width", dx)
+            .attr("height", dy)
+            .attr("stroke", "red")
+            .attr("fill", "none");
+
+        // Render annotations
         const annotations = [{
             note: {
                 label: "Global average life expectancy has increased significantly.",
@@ -86,6 +86,7 @@ function createScene1(data) {
         svg.append("g")
             .call(makeAnnotations);
 
+        // Add title
         svg.append("text")
             .attr("x", width / 2)
             .attr("y", 40)
