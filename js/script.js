@@ -92,14 +92,9 @@ function loadAndCreate() {
     });
 }
 
-loadAndCreate();
-
-// Adjust map on window resize
 window.addEventListener("resize", () => {
-    d3.select("#visualization").select("svg").remove(); // Remove old SVG
-    const svg = d3.select("#visualization").append("svg") // Create new SVG
-        .attr("width", "100%")
-        .attr("height", "100%");
-
     loadAndCreate(); // Re-load data and re-create the map with updated dimensions
 });
+
+// Initial load
+loadAndCreate();
