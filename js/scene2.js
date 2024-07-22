@@ -36,7 +36,7 @@ function createScene2(data) {
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
-    // Define scales and axes
+    // Define a linear scale with custom transformation
     const xScale = d3.scaleLinear()
         .domain([minGDP, maxGDP])
         .range([50, width - 50]);
@@ -45,11 +45,21 @@ function createScene2(data) {
         .domain([0, maxLifeExpectancy])
         .range([height - 50, 50]);
 
+    // Custom logarithmic transformation function
+    function logTransform(x) {
+        return Math.log(x + 1); // Adding 1 to avoid log(0)
+    }
+
+    // Apply the transformation to the xScale domain
+    const xTransformedScale = d3.scaleLinear()
+        .domain([logTransform(minGDP), logTransform(maxGDP)])
+        .range([50, width - 50]);
+
     // Test xScale manually with hardcoded values
     const testValues = [minGDP, maxGDP, (minGDP + maxGDP) / 2];
     testValues.forEach(value => {
-        const x = xScale(value);
-        console.log(`Test value: ${value}, xScale result: ${x}`);
+        const x = xTransformedScale(logTransform(value));
+        console.log(`Test value: ${value}, xTransformedScale result: ${x}`);
     });
 
     // Add scatter plot dots
@@ -57,8 +67,8 @@ function createScene2(data) {
         .data(values)
         .enter().append("circle")
         .attr("cx", d => {
-            const x = xScale(d.averageGDP);
-            console.log(`GDP: ${d.averageGDP}, xScale Domain: ${xScale.domain()}, x: ${x}`); // Log to debug
+            const x = xTransformedScale(logTransform(d.averageGDP));
+            console.log(`GDP: ${d.averageGDP}, xTransformedScale Domain: ${xTransformedScale.domain()}, x: ${x}`); // Log to debug
             return isNaN(x) ? 0 : x; // Fallback if x is NaN
         })
         .attr("cy", d => {
@@ -82,7 +92,7 @@ function createScene2(data) {
     // Add x and y axes
     svg.append("g")
         .attr("transform", `translate(0, ${height - 50})`)
-        .call(d3.axisBottom(xScale).tickFormat(d3.format(".0s")).ticks(5))
+        .call(d3.axisBottom(xTransformedScale).tickFormat(d3.format(".0s")).ticks(5))
         .append("text")
         .attr("x", width - 50)
         .attr("y", 30)
