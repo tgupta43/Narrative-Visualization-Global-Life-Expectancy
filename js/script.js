@@ -42,7 +42,7 @@ function createScene1(data) {
             .attr("d", path)
             .attr("fill", d => {
                 // Find life expectancy for each country
-                const countryName = d.properties.name; // Assuming `d.properties.name` is the country name
+                const countryName = d.properties.NAME_EN; // Assuming `d.properties.name` is the country name
                 const lifeExpectancy = countryDataMap.get(countryName);
                 return colorScale(lifeExpectancy || 0);
             })
