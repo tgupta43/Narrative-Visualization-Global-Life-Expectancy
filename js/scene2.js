@@ -37,7 +37,7 @@ function createScene2(data) {
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
     // Define scales and axes
-    const xScale = d3.scaleLog()
+    const xScale = d3.scaleLinear()
         .domain([minGDP, maxGDP])
         .range([50, width - 50]);
 
