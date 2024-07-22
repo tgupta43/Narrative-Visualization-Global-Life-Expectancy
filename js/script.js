@@ -92,7 +92,7 @@ function createScene1(data) {
             .attr("y", 10)
             .attr("text-anchor", "start")
             .attr("font-size", "12px")
-            .text("Max: " + Math.round(maxLifeExpectancy));
+            .text("Max: " + (maxLifeExpectancy));
 
         legend.append("text")
             .attr("x", legendWidth + 5)
