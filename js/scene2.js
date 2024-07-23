@@ -202,7 +202,7 @@ function createScene2(data) {
 
     // Add the label to the right of the legend
     legend.append("text")
-        .attr("x", legendWidth -10) // Positioned to the right of the legend
+        .attr("x", legendWidth - 25) // Positioned to the right of the legend
         .attr("y", legendHeight / 2)
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
