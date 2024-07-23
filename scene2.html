@@ -6,7 +6,7 @@
     <title>GDP vs Life Expectancy Scatter Plot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-    <script src="https://unpkg.com/d3-annotation@3.0.2/dist/d3-annotation.min.js"></script> <!-- Updated d3-annotation script -->
+    <script src="https://unpkg.com/d3-annotation@3.0.2/dist/d3-annotation.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,18 +19,17 @@
             position: relative;
         }
         #visualization {
-            width: 60vw; /* Adjusted width to fit */
-            height: 60vh; /* Adjusted height to fit */
-            display: flex; /* Enable flexbox layout */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
+            width: 60vw;
+            height: 60vh;
+            display: flex;
+            flex-direction: column; /* Added to stack title and scatterplot */
+            align-items: center;
             position: relative;
         }
         svg {
-            width: 100%; /* Scale the SVG to fit the container */
-            height: 100%; /* Scale the SVG to fit the container */
+            width: 100%;
+            height: 100%;
         }
-        /* Tooltip styles */
         #tooltip {
             position: absolute;
             background-color: white;
@@ -42,11 +41,10 @@
             border-radius: 4px;
             z-index: 10;
         }
-        /* Navigation buttons styles */
         #navigation {
             position: absolute;
             bottom: 20px;
-            width: 60vw; /* Adjust width to match the visualization container */
+            width: 60vw;
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
@@ -63,28 +61,37 @@
         #navigation button:hover {
             background-color: #0056b3;
         }
-        /* Legend styles */
         #legend {
             position: absolute;
             top: 20px;
-            left: 2px; /* Move legend closer to scatterplot */
-            width: 120px; /* Increase width */
-            height: 350px; /* Increase height */
-            padding-right: 20px; /* Add padding to the right */
-            padding-bottom: 20px; /* Add padding to the bottom */
+            left: 2px;
+            width: 120px;
+            height: 350px;
+            padding-right: 20px;
+            padding-bottom: 20px;
         }
-        /* Annotation styles */
         #annotations {
             position: absolute;
             top: 20px;
-            right: 20px; /* Position annotations on the right side */
-            width: 300px; /* Adjust width as needed */
-            height: 60vh; /* Adjust height to fit the visualization */
+            right: 20px;
+            width: 300px;
+            height: 60vh;
+        }
+        #title {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
     <div id="visualization">
+        <div id="title">GDP($) vs Life Expectancy (Yrs.) Scatter Plot</div>
         <!-- The SVG for the scatter plot will be appended here by the script -->
         <div id="legend"></div>
     </div>
@@ -95,7 +102,6 @@
         <button id="prev-btn" onclick="location.href='scene1.html'">Scene 1</button>
         <button id="next-btn" onclick="location.href='scene3.html'">Scene 3</button>
     </div>
-    <!-- Tooltip Element -->
     <div id="tooltip"></div>
     <script src="js/scene2.js"></script>
 </body>
