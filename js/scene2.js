@@ -119,8 +119,8 @@ function createScene2(data) {
         .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
-        .attr("x", -60) // Adjusted to avoid cutoff
-        .attr("y", -35) // Positioned slightly above the axis
+        .attr("x", -80) // Adjusted to avoid cutoff
+        .attr("y", -40) // Positioned slightly above the axis
         .attr("fill", "#000")
         .attr("text-anchor", "start")
         .text("Life Expectancy (years)"); // Updated label text
@@ -161,24 +161,24 @@ function createScene2(data) {
 
     // Add max and min labels to the legend with adjusted positioning
     legend.append("text")
-        .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
+        .attr("x", -50) // Position label to the left of the legend
         .attr("y", 20)
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "end")
         .attr("font-size", "12px")
         .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
 
     legend.append("text")
-        .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
+        .attr("x", -50) // Position label to the left of the legend
         .attr("y", legendHeight - 5)
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "end")
         .attr("font-size", "12px")
         .text("Min: " + d3.format(".0f")(minLifeExpectancy));
 
-    // Add the label to the right of the legend
+    // Add the label to the left of the legend
     legend.append("text")
-        .attr("x", legendWidth + 10) // Positioned to the right of the legend
+        .attr("x", -50) // Positioned to the left of the legend
         .attr("y", legendHeight / 2)
-        .attr("text-anchor", "start")
+        .attr("text-anchor", "end")
         .attr("font-size", "12px")
         .text("Life Expectancy (years)"); // Label for legend
 }
