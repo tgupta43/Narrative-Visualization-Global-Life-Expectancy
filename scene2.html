@@ -12,14 +12,23 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            overflow: hidden; /* Prevents scrollbars from appearing if SVG is too large */
+        }
+        #container {
+            display: flex;
+            justify-content: center; /* Centers the scatterplot horizontally */
+            align-items: center; /* Centers the scatterplot vertically */
+            height: 100vh;
+            position: relative;
         }
         #visualization {
-            margin: 20px;
+            position: relative; /* Ensures the scatterplot is positioned correctly within its container */
         }
         #legend {
             position: absolute;
             top: 20px;
             left: 20px;
+            width: 80px; /* Adjust width as needed */
         }
         .tooltip {
             position: absolute;
@@ -54,8 +63,10 @@
     </style>
 </head>
 <body>
-    <div id="visualization"></div>
-    <div id="legend"></div>
+    <div id="container">
+        <div id="visualization"></div>
+        <div id="legend"></div>
+    </div>
     <div class="tooltip" id="tooltip"></div>
     <div class="navigation-buttons">
         <button onclick="window.location.href='scene1.html'">Previous</button>
