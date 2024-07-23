@@ -210,29 +210,37 @@ function createScene2(data) {
         .attr("font-size", "12px")
         .text("Life Expectancy (years)"); // Label for legend
     
-    // Add annotations without connectors
-    const annotations = [
-        {
-            note: {
-                label: "This is an annotation for the scatter plot.",
-                align: "left"
-            },
-            x: xTransformedScale(logTransform(1000000000)), // Example GDP value
-            y: yScale(70), // Example life expectancy value
-            dy: -50,
-            dx: 50
-        }
-    ];
+    // Assuming you have already included D3 and d3-annotation libraries
 
-    const makeAnnotations = d3.annotation()
-        .type(d3.annotationLabel)
-        .annotations(annotations);
+// Define your annotation notes
+const annotations = [
+    {
+        note: {
+            label: "This is an annotation for the scatter plot.",
+            align: "left",
+            title: "Annotation Title"
+        },
+        x: 150,  // Fixed x position within #annotations
+        y: 50,   // Fixed y position within #annotations
+        dy: 10,
+        dx: 10
+    }
+];
 
-    svg.append("g")
-        .attr("class", "annotations")
-        .call(makeAnnotations)
-        .selectAll(".annotation-connector")
-        .style("display", "none"); // Hide connectors
+// Create a separate SVG element for annotations
+const svgAnnotations = d3.select("#annotations")
+    .append("svg")
+    .attr("width", "300px")  // Match the width of the #annotations div
+    .attr("height", "60vh"); // Match the height of the #annotations div
+
+// Initialize the d3-annotation library
+const makeAnnotations = d3.annotation()
+    .annotations(annotations);
+
+// Apply the annotation to the SVG
+svgAnnotations
+    .call(makeAnnotations);
+
 }
 
 
