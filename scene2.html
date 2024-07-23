@@ -3,52 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDP vs Life Expectancy Scatter Plot</title>
+    <title>Scene 2 - Scatterplot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-    <script src="js/d3-annotation.min.js"></script>
+    <script src="js/scene2.js" defer></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
+            padding: 0;
+            background-color: #f4f4f4;
         }
         #visualization {
-            width: 60vw; /* Adjust the width to make it smaller */
-            height: 60vh; /* Adjust the height to make it smaller */
-            position: relative; /* Ensure SVG is positioned relative to this container */
+            margin: 20px;
         }
-        svg {
-            width: 100%; /* Scale the SVG to fit the container */
-            height: 100%; /* Scale the SVG to fit the container */
-        }
-        /* Tooltip styles */
-        #tooltip {
+        #legend {
             position: absolute;
-            background-color: white;
-            border: 1px solid #ccc;
-            padding: 5px;
-            display: none;
-            pointer-events: none;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            z-index: 10;
+            top: 20px;
+            left: 20px;
         }
-        /* Navigation buttons styles */
-        #navigation {
+        .tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 5px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            pointer-events: none;
+            display: none;
+        }
+        .navigation-buttons {
             position: absolute;
             bottom: 20px;
-            width: 60vw; /* Adjust width to match the visualization container */
+            width: calc(100% - 40px); /* Adjust width to fit the container */
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
         }
-        #navigation button {
+        .navigation-buttons button {
             font-size: 16px;
             padding: 10px 20px;
             border: none;
@@ -57,31 +48,18 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        #navigation button:hover {
+        .navigation-buttons button:hover {
             background-color: #0056b3;
-        }
-        /* Legend styles */
-        #legend {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 80px; /* Adjust width to make it smaller */
-            height: 300px; /* Adjust height as needed */
         }
     </style>
 </head>
 <body>
-    <div id="visualization">
-        <!-- The SVG for the scatter plot will be appended here by the script -->
-    </div>
-    <div id="navigation">
-        <button id="prev-btn" onclick="location.href='index.html'">Previous</button>
-        <button id="next-btn" onclick="location.href='scene3.html'">Next</button>
-    </div>
-    <!-- Tooltip Element -->
-    <div id="tooltip"></div>
-    <!-- Legend Element -->
+    <div id="visualization"></div>
     <div id="legend"></div>
-    <script src="js/scene2.js"></script>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="navigation-buttons">
+        <button onclick="window.location.href='scene1.html'">Previous</button>
+        <button onclick="window.location.href='scene3.html'">Next</button>
+    </div>
 </body>
 </html>

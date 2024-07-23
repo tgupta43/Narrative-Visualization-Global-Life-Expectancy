@@ -4,10 +4,13 @@
 function createScene2(data) {
     console.log("Data for Scene 2:", data); // Add a log to verify data
 
-    const width = 960, height = 500; // Set to standard dimensions
+    const width = 800; // Adjusted width for smaller scatterplot
+    const height = 500; // Adjusted height for smaller scatterplot
+    const margin = { top: 20, right: 100, bottom: 50, left: 80 }; // Adjusted margins
+
     const svg = d3.select("#visualization").append("svg")
-        .attr("width", "100%")
-        .attr("height", "100%")
+        .attr("width", width)
+        .attr("height", height)
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
 
@@ -36,14 +39,13 @@ function createScene2(data) {
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
 
-    // Define a linear scale with custom transformation
     const xScale = d3.scaleLinear()
         .domain([minGDP, maxGDP])
-        .range([50, width - 50]);
+        .range([margin.left, width - margin.right]);
 
     const yScale = d3.scaleLinear()
         .domain([0, maxLifeExpectancy])
-        .range([height - 50, 50]);
+        .range([height - margin.bottom, margin.top]);
 
     // Custom logarithmic transformation function
     function logTransform(x) {
@@ -53,7 +55,7 @@ function createScene2(data) {
     // Apply the transformation to the xScale domain
     const xTransformedScale = d3.scaleLinear()
         .domain([logTransform(minGDP), logTransform(maxGDP)])
-        .range([50, width - 50]);
+        .range([margin.left, width - margin.right]);
 
     // Test xScale manually with hardcoded values
     const testValues = [minGDP, maxGDP, (minGDP + maxGDP) / 2];
@@ -64,7 +66,7 @@ function createScene2(data) {
 
     // Add scatter plot dots
     svg.selectAll("circle")
-        .data(values)
+        .data(values.filter(d => !isNaN(d.averageGDP))) // Filter out points with NaN GDP
         .enter().append("circle")
         .attr("cx", d => {
             const x = xTransformedScale(logTransform(d.averageGDP));
@@ -95,17 +97,17 @@ function createScene2(data) {
 
     // Add x and y axes
     svg.append("g")
-        .attr("transform", `translate(0, ${height - 50})`)
+        .attr("transform", `translate(0, ${height - margin.bottom})`)
         .call(d3.axisBottom(xTransformedScale).tickFormat(d3.format(".0s")).ticks(5))
         .append("text")
-        .attr("x", width - 50)
+        .attr("x", width - margin.right)
         .attr("y", 30)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
         .text("GDP (current US$)");
 
     svg.append("g")
-        .attr("transform", `translate(50, 0)`)
+        .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
         .attr("x", -30)
@@ -115,8 +117,8 @@ function createScene2(data) {
         .text("Life Expectancy at Birth (years)");
 
     // Add legend for life expectancy
-    const legendWidth = 60;
-    const legendHeight = height / 2;
+    const legendWidth = 60; // Set width of legend
+    const legendHeight = height / 1.5; // Set height of legend
     const legend = d3.select("#legend").append("svg")
         .attr("width", legendWidth)
         .attr("height", legendHeight);
