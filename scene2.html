@@ -19,7 +19,7 @@
             position: relative;
         }
         #visualization {
-            width: 70vw; /* Adjusted width to fit */
+            width: 60vw; /* Adjusted width to fit */
             height: 60vh; /* Adjusted height to fit */
             display: flex; /* Enable flexbox layout */
             justify-content: center; /* Center horizontally */
@@ -46,7 +46,7 @@
         #navigation {
             position: absolute;
             bottom: 20px;
-            width: 70vw; /* Adjust width to match the visualization container */
+            width: 60vw; /* Adjust width to match the visualization container */
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
@@ -66,31 +66,19 @@
         /* Legend styles */
         #legend {
             position: absolute;
-            top: 10px;
-            left: 10px; /* Adjust position to the left */
-            width: 100px; /* Adjust width to fit the legend */
-            height: 350px; /* Adjust height to fit the legend */
+            top: 20px;
+            left: 10px; /* Move legend closer to scatterplot */
+            width: 120px; /* Increase width */
+            height: 350px; /* Increase height */
             padding-right: 20px; /* Add padding to the right */
             padding-bottom: 20px; /* Add padding to the bottom */
-        }
-        /* Legend label styles */
-        .legend-label {
-            font-size: 12px;
-            text-anchor: start;
-        }
-        /* Axis label styles */
-        .axis-label {
-            font-size: 12px;
-            fill: #000;
         }
     </style>
 </head>
 <body>
     <div id="visualization">
         <!-- The SVG for the scatter plot will be appended here by the script -->
-        <div id="legend">
-            <!-- Legend label will be appended here -->
-        </div>
+        <div id="legend"></div>
     </div>
     <div id="navigation">
         <button id="prev-btn" onclick="location.href='scene1.html'">Scene 1</button>
