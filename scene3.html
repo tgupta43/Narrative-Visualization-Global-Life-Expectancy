@@ -3,16 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sea Level Over Time</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>GDP vs Life Expectancy Scatter Plot</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+    <script src="js/d3-annotation.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        /* Container for the visualization */
+        #visualization {
+            width: 70vw;
+            height: 70vh;
+            display: flex;
+            flex-direction: column; /* Stack title and scatterplot vertically */
+            align-items: center;
+            position: relative;
+            padding-top: 40px; /* Add padding for the title */
+        }
+        /* Title styling */
+        #title {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+        #map-subtitle {
+            font-size: 18px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        /* Ensure the scatter plot SVG does not overflow */
+        #visualization svg {
+            width: 100%;
+            height: calc(100% - 40px); /* Subtract the space for the title */
+        }
+        /* Tooltip styles */
+        #tooltip {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 5px;
+            display: none;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            z-index: 10;
+        }
+        /* Navigation buttons styles */
+        #navigation {
+            position: absolute;
+            bottom: 20px;
+            width: 60vw; /* Adjust width to match the visualization container */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        #navigation button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #navigation button:hover {
+            background-color: #0056b3;
+        }
+        /* Legend styles */
+        #legend {
+            position: absolute;
+            top: 60px; /* Positioned below the title */
+            left: 2px;
+            width: 120px; /* Ensure this is enough for the legend */
+            height: calc(100% - 60px); /* Adjust height to fit the container */
+            padding-right: 20px;
+            padding-bottom: 20px;
+        }
+        /* Annotation styles */
+        #annotations {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* Position annotations on the right side */
+            width: 300px; /* Adjust width as needed */
+            height: 150vh; /* Adjust height to fit the visualization */
+            overflow: hidden; /* Ensure annotations do not overflow */
+            pointer-events: none; /* Ensure annotations do not interfere with interactions */
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Sea Level Over Time</h1>
-        <div id="chart"></div>
+    <div id="visualization">
+        <div id="title">GDP vs Life Expectancy Scatter Plot</div>
+        <div id="map-subtitle">Hover over each country to see the Life Expectancy in years</div>
+        <!-- The SVG for the scatter plot will be appended here by the script -->
+        <div id="legend"></div>
     </div>
-
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <div id="annotations"></div> <!-- Keep this div for annotations -->
+    <div id="navigation">
+        <button id="prev-btn" onclick="location.href='scene2.html'">Scene 2</button>
+        <button id="next-btn" onclick="location.href='final.html'">Final</button>
+    </div>
+    <!-- Tooltip Element -->
+    <div id="tooltip"></div>
     <script src="js/scene3.js"></script>
 </body>
 </html>
