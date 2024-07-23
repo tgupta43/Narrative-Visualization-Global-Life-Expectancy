@@ -2,18 +2,15 @@
 function createScene2(data) {
     console.log("Data for Scene 2:", data); // Add a log to verify data
 
-
     const width = 800; // Adjusted width for smaller scatterplot
     const height = 500; // Adjusted height for smaller scatterplot
     const margin = { top: 20, right: 160, bottom: 50, left: 120 }; // Increased right margin for legend
-
 
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
         .attr("height", height)
         .attr("viewBox", `0 0 ${width} ${height}`)
         .attr("preserveAspectRatio", "xMidYMid meet");
-
 
     // Create a map from country names to averaged GDP and life expectancy values
     const countryDataMap = d3.rollup(data, v => {
@@ -23,9 +20,7 @@ function createScene2(data) {
         return { averageLifeExpectancy, averageGDP };
     }, d => d["Country Name"]);
 
-
     console.log("Country Data Map:", countryDataMap); // Log to verify calculations
-
 
     const values = [...countryDataMap.entries()].map(([countryName, { averageLifeExpectancy, averageGDP }]) => ({
         countryName,
@@ -33,11 +28,9 @@ function createScene2(data) {
         averageGDP
     }));
 
-
     // Find Chad's average life expectancy
     const chadData = values.find(d => d.countryName === "Chad");
     const chadLifeExpectancy = chadData ? chadData.averageLifeExpectancy : 0;
-
 
     // Define the range for the legend and color scale
     const minLifeExpectancy = Math.max(chadLifeExpectancy, d3.min(values, d => d.averageLifeExpectancy));
@@ -45,40 +38,33 @@ function createScene2(data) {
     const minGDP = d3.min(values.filter(d => !isNaN(d.averageGDP)), d => d.averageGDP);
     const maxGDP = d3.max(values.filter(d => !isNaN(d.averageGDP)), d => d.averageGDP);
 
-
     console.log("Chad's Life Expectancy:", chadLifeExpectancy);
     console.log("Min Life Expectancy:", minLifeExpectancy);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
     console.log("Min GDP:", minGDP);
     console.log("Max GDP:", maxGDP);
 
-
     // Color scale for life expectancy
     const colorScale = d3.scaleSequential(d3.interpolateYlOrRd)
         .domain([minLifeExpectancy, maxLifeExpectancy]);
-
 
     const xScale = d3.scaleLinear()
         .domain([minGDP, maxGDP])
         .range([margin.left, width - margin.right]);
 
-
     const yScale = d3.scaleLinear()
         .domain([0, maxLifeExpectancy])
         .range([height - margin.bottom, margin.top]);
-
 
     // Custom logarithmic transformation function
     function logTransform(x) {
         return Math.log(x + 1); // Adding 1 to avoid log(0)
     }
 
-
     // Apply the transformation to the xScale domain
     const xTransformedScale = d3.scaleLinear()
         .domain([logTransform(minGDP), logTransform(maxGDP)])
         .range([margin.left, width - margin.right]);
-
 
     // Test xScale manually with hardcoded values
     const testValues = [minGDP, maxGDP, (minGDP + maxGDP) / 2];
@@ -86,7 +72,6 @@ function createScene2(data) {
         const x = xTransformedScale(logTransform(value));
         console.log(`Test value: ${value}, xTransformedScale result: ${x}`);
     });
-
 
     // Add scatter plot dots, filtering out entries with NaN or null GDP
     svg.selectAll("circle")
@@ -119,7 +104,6 @@ function createScene2(data) {
             d3.select("#tooltip").style("display", "none");
         });
 
-
     // Add x and y axes
     svg.append("g")
         .attr("transform", `translate(0, ${height - margin.bottom})`)
@@ -131,8 +115,7 @@ function createScene2(data) {
         .attr("text-anchor", "end")
         .text("GDP (current US$) log scale");
 
-
-        svg.append("g")
+    svg.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
@@ -142,8 +125,6 @@ function createScene2(data) {
         .attr("text-anchor", "middle")
         .attr("font-size", "14px")
         .text("Life Expectancy (years)");
-    
-
 
     // Create the legend
     const legendWidth = 60; // Legend width
@@ -152,28 +133,23 @@ function createScene2(data) {
         .attr("width", legendWidth + 200) // Increased width to accommodate label
         .attr("height", legendHeight);
 
-
     // Define the scale for the legend
     const legendScale = d3.scaleLinear()
         .domain([minLifeExpectancy, maxLifeExpectancy])
         .range([legendHeight, 0]);
 
-
     const legendAxis = d3.axisRight(legendScale)
         .ticks(10)
         .tickSize(5);
-
 
     legend.append("g")
         .attr("transform", `translate(${legendWidth - 10}, 0)`)
         .call(legendAxis);
 
-
     // Create color blocks for the legend
     const numBlocks = 10;
     const blockHeight = legendHeight / numBlocks;
     const blockData = d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks);
-
 
     legend.selectAll("rect")
         .data(blockData)
@@ -184,40 +160,60 @@ function createScene2(data) {
         .attr("height", blockHeight)
         .style("fill", d => colorScale(d));
 
-
     // Add max and min labels to the legend with adjusted positioning
     legend.append("text")
         .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
-        .attr("y", 20)
-        .attr("text-anchor", "start")
-        .attr("font-size", "12px")
-        .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
-
+        .attr("y", legendHeight - 10)
+        .attr("fill", "#000")
+        .text(`${d3.format(".0f")(maxLifeExpectancy)}`);
 
     legend.append("text")
         .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
-        .attr("y", legendHeight - 5)
-        .attr("text-anchor", "start")
-        .attr("font-size", "12px")
-        .text("Min: " + d3.format(".0f")(minLifeExpectancy));
+        .attr("y", 20)
+        .attr("fill", "#000")
+        .text(`${d3.format(".0f")(minLifeExpectancy)}`);
 
+    // Create annotations
+    const annotations = [
+        {
+            note: {
+                label: "Chad has a relatively low life expectancy.",
+                title: "Chad",
+                wrap: 200
+            },
+            x: xTransformedScale(logTransform(chadData.averageGDP)) + 20, // Adjusted x-position
+            y: yScale(chadData.averageLifeExpectancy),
+            dx: 10,
+            dy: -30,
+            subject: {
+                radius: 5,
+                radiusPadding: 10
+            },
+            color: ["#ff0000"]
+        }
+    ];
 
-    // Add the label to the right of the legend
-    legend.append("text")
-        .attr("x", legendWidth - 25) // Positioned to the right of the legend
-        .attr("y", legendHeight / 2)
-        .attr("text-anchor", "start")
-        .attr("font-size", "12px")
-        .text("Life Expectancy (years)"); // Label for legend
+    const makeAnnotations = d3.annotation()
+        .type(d3.annotationLabel)
+        .annotations(annotations);
+
+    svg.append("g")
+        .attr("class", "annotation-group")
+        .call(makeAnnotations);
+
+    // Add a tooltip
+    d3.select("body").append("div")
+        .attr("id", "tooltip")
+        .attr("class", "tooltip")
+        .style("position", "absolute")
+        .style("background-color", "#fff")
+        .style("border", "1px solid #ddd")
+        .style("padding", "5px")
+        .style("border-radius", "3px")
+        .style("display", "none");
 }
 
-
-// Load data and initialize the visualization
+// Load and preprocess data
 d3.csv("data/lifeExpectancy.csv").then(data => {
-    console.log("CSV Data Loaded:", data); // Add a log to verify data loading
     createScene2(data);
-}).catch(error => {
-    console.error('Error loading or processing CSV data:', error);
-});
-
-
+}).catch(error => console.error("Error loading or processing data:", error));

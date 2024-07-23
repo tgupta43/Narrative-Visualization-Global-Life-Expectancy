@@ -6,7 +6,7 @@
     <title>GDP vs Life Expectancy Scatter Plot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-    <script src="js/d3-annotation.min.js"></script>
+    <script src="https://unpkg.com/d3-annotation@3.0.2/dist/d3-annotation.min.js"></script> <!-- Updated d3-annotation script -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,12 +73,23 @@
             padding-right: 20px; /* Add padding to the right */
             padding-bottom: 20px; /* Add padding to the bottom */
         }
+        /* Annotation styles */
+        #annotations {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* Position annotations on the right side */
+            width: 300px; /* Adjust width as needed */
+            height: 60vh; /* Adjust height to fit the visualization */
+        }
     </style>
 </head>
 <body>
     <div id="visualization">
         <!-- The SVG for the scatter plot will be appended here by the script -->
         <div id="legend"></div>
+    </div>
+    <div id="annotations">
+        <!-- The SVG for annotations will be appended here by the script -->
     </div>
     <div id="navigation">
         <button id="prev-btn" onclick="location.href='scene1.html'">Scene 1</button>
