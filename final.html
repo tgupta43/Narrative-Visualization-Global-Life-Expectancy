@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Life Expectancy and its Factors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            padding: 0 20px; /* Adding padding to the body */
+            box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+        }
+        #title-container {
+            text-align: center;
+            max-width: 80%; /* Limits the width of the container */
+        }
+        #title {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        #subtitle {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+       /* Navigation buttons styles */
+       #navigation {
+            position: absolute;
+            bottom: 20px;
+            width: 60vw; /* Adjust width to match the visualization container */
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        #navigation button {
+            font-size: 16px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #navigation button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="title-container">
+        <div id="title">Global Life Expectancy and its Factors</div>
+        <div id="subtitle">Ever wondered whether different geographical locations have different life expectancies? We are all biologically human, so why would we have different life spans? Let's explore the Life expectancies around the world and possible factors.</div>
+    </div>
+    <div id="navigation">
+        <button id="prev-btn" onclick="window.location.href='scene3.html'">Scene 3</button>
+        <button id="next-btn" onclick="window.location.href='index.html'">HomePage</button>
+    </div>
+</body>
+</html>
