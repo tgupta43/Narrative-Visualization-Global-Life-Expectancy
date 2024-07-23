@@ -19,21 +19,19 @@
             position: relative;
         }
         /* Container for the visualization */
-        #container {
-            display: flex;
-            align-items: flex-start;
-            height: 60vh; /* Adjust height to match the visualization */
-        }
         #visualization {
             width: 60vw;
-            height: 100%;
+            height: 60vh;
             display: flex;
             flex-direction: column; /* Stack title and scatterplot vertically */
+            align-items: center;
             position: relative;
             padding-top: 40px; /* Add padding for the title */
         }
         /* Title styling */
         #title {
+            position: absolute;
+            top: 0;
             width: 100%;
             text-align: center;
             font-size: 24px;
@@ -90,24 +88,23 @@
         }
         /* Annotation styles */
         #annotations {
+            position: absolute;
+            top: 20px;
+            right: 20px; /* Position annotations on the right side */
             width: 300px; /* Adjust width as needed */
             height: 60vh; /* Adjust height to fit the visualization */
-            padding: 10px; /* Optional: Add padding for aesthetics */
             overflow: hidden; /* Ensure annotations do not overflow */
+            pointer-events: none; /* Ensure annotations do not interfere with interactions */
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="visualization">
-            <div id="title">GDP vs Life Expectancy Scatter Plot</div>
-            <!-- The SVG for the scatter plot will be appended here by the script -->
-            <div id="legend"></div>
-        </div>
-        <div id="annotations">
-            <!-- The SVG for annotations will be appended here by the script -->
-        </div>
+    <div id="visualization">
+        <div id="title">GDP vs Life Expectancy Scatter Plot</div>
+        <!-- The SVG for the scatter plot will be appended here by the script -->
+        <div id="legend"></div>
     </div>
+    <div id="annotations"></div> <!-- Keep this div for annotations -->
     <div id="navigation">
         <button id="prev-btn" onclick="location.href='scene1.html'">Scene 1</button>
         <button id="next-btn" onclick="location.href='scene3.html'">Scene 3</button>
