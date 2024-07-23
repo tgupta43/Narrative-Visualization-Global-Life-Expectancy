@@ -216,9 +216,9 @@ function createScene2(data) {
 const annotations = [
     {
         note: {
-            label: "This is an annotation for the scatter plot.",
+            label: "The scatterplot shows us that higher GDP usually translates to higher life expectancy.  ",
             align: "left",
-            title: "Annotation Title"
+            title: "Higher GDP does show higher life expectancy."
         },
         x: 60,  // Fixed x position within #annotations
         y: 50,   // Fixed y position within #annotations
@@ -227,12 +227,12 @@ const annotations = [
     },
     {
         note: {
-            label: "2 This is an annotation for the scatter plot.",
+            label: "GDP is based on country, their status, politics, governments, and in turn that affects their own people's life.",
             align: "left",
-            title: "Annotation Title"
+            title: "Shows how Economic status affects how long a person can live."
         },
         x: 60,  // Fixed x position within #annotations
-        y: 150,   // Fixed y position within #annotations
+        y: 250,   // Fixed y position within #annotations
         dy: 10,
         dx: 10
     }
