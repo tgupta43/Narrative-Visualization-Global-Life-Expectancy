@@ -117,7 +117,7 @@ function createScene2(data) {
         .text("Life Expectancy at Birth (years)");
 
     // Add legend for life expectancy
-    const legendWidth = 80; // Adjusted width of legend
+    const legendWidth = 100; // Increased width of legend
     const legendHeight = height / 1.5; // Set height of legend
     const legend = d3.select("#legend").append("svg")
         .attr("width", legendWidth + 40) // Increased width for ticks and labels
@@ -130,7 +130,8 @@ function createScene2(data) {
 
     const legendAxis = d3.axisRight(legendScale)
         .ticks(10)
-        .tickSize(5);
+        .tickSize(5)
+        .tickFormat(d3.format(".0f")); // Format tick labels
 
     legend.append("g")
         .attr("transform", `translate(${legendWidth - 10}, 0)`)
@@ -144,7 +145,7 @@ function createScene2(data) {
         .enter().append("rect")
         .attr("x", 0)
         .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
-        .attr("width", legendWidth - 5)
+        .attr("width", legendWidth - 10) // Adjust width of blocks
         .attr("height", blockHeight)
         .style("fill", d => colorScale(d));
 
@@ -162,6 +163,7 @@ function createScene2(data) {
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
         .text("Min: " + d3.format(".0f")(minLifeExpectancy));
+
 }
 
 // Load data and initialize the visualization
