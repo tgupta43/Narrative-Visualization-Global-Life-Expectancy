@@ -147,7 +147,7 @@ function createScene2(data) {
     const legendWidth = 60; // Legend width
     const legendHeight = height / 1.5; // Height of the legend
     const legend = d3.select("#legend").append("svg")
-        .attr("width", legendWidth + 80) // Increased width to accommodate label
+        .attr("width", legendWidth + 100) // Increased width to accommodate label
         .attr("height", legendHeight);
 
 
@@ -202,7 +202,7 @@ function createScene2(data) {
 
     // Add the label to the right of the legend
     legend.append("text")
-        .attr("x", legendWidth + 10) // Positioned to the right of the legend
+        .attr("x", legendWidth +10) // Positioned to the right of the legend
         .attr("y", legendHeight / 2)
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
