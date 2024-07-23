@@ -19,9 +19,13 @@
             position: relative;
         }
         #visualization {
-            width: 80vw;
-            height: 80vh;
+            width: 60vw; /* Adjust the width to make it smaller */
+            height: 60vh; /* Adjust the height to make it smaller */
             position: relative; /* Ensure SVG is positioned relative to this container */
+        }
+        svg {
+            width: 100%; /* Scale the SVG to fit the container */
+            height: 100%; /* Scale the SVG to fit the container */
         }
         /* Tooltip styles */
         #tooltip {
@@ -39,7 +43,7 @@
         #navigation {
             position: absolute;
             bottom: 20px;
-            width: 80vw;
+            width: 60vw; /* Adjust width to match the visualization container */
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
@@ -61,8 +65,8 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            width: 80px; /* Adjust as needed */
-            height: 300px; /* Adjust as needed */
+            width: 80px; /* Adjust width to make it smaller */
+            height: 300px; /* Adjust height as needed */
         }
     </style>
 </head>
