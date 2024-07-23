@@ -242,7 +242,7 @@ const annotations = [
 const svgAnnotations = d3.select("#annotations")
     .append("svg")
     .attr("width", "300px")  // Match the width of the #annotations div
-    .attr("height", "60vh"); // Match the height of the #annotations div
+    .attr("height", "150vh"); // Match the height of the #annotations div
 
 // Initialize the d3-annotation library
 const makeAnnotations = d3.annotation()
