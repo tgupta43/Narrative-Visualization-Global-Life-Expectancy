@@ -22,17 +22,21 @@ function createScene2(data) {
 
     console.log("Country Data Map:", countryDataMap); // Log to verify calculations
 
-    const values = [...countryDataMap.entries()].map(([countryName, { averageLifeExpectancy, averageGDP }]) => ({ countryName, averageLifeExpectancy, averageGDP }));
+    const values = [...countryDataMap.entries()].map(([countryName, { averageLifeExpectancy, averageGDP }]) => ({
+        countryName,
+        averageLifeExpectancy,
+        averageGDP
+    }));
 
     // Find Chad's average life expectancy
     const chadData = values.find(d => d.countryName === "Chad");
     const chadLifeExpectancy = chadData ? chadData.averageLifeExpectancy : 0;
-    
+
     // Define the range for the legend and color scale
     const minLifeExpectancy = Math.max(chadLifeExpectancy, d3.min(values, d => d.averageLifeExpectancy));
     const maxLifeExpectancy = d3.max(values, d => d.averageLifeExpectancy);
-    const minGDP = d3.min(values, d => d.averageGDP);
-    const maxGDP = d3.max(values, d => d.averageGDP);
+    const minGDP = d3.min(values.filter(d => !isNaN(d.averageGDP)), d => d.averageGDP);
+    const maxGDP = d3.max(values.filter(d => !isNaN(d.averageGDP)), d => d.averageGDP);
 
     console.log("Chad's Life Expectancy:", chadLifeExpectancy);
     console.log("Min Life Expectancy:", minLifeExpectancy);
@@ -69,9 +73,9 @@ function createScene2(data) {
         console.log(`Test value: ${value}, xTransformedScale result: ${x}`);
     });
 
-    // Add scatter plot dots
+    // Add scatter plot dots, filtering out entries with NaN or null GDP
     svg.selectAll("circle")
-        .data(values)
+        .data(values.filter(d => !isNaN(d.averageGDP) && d.averageGDP !== null)) // Filter out points with NaN or null GDP
         .enter().append("circle")
         .attr("cx", d => {
             const x = xTransformedScale(logTransform(d.averageGDP));
