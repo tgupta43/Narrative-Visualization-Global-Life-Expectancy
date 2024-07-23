@@ -136,7 +136,7 @@ function createScene2(data) {
         .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
-        .attr("x", -60) // Adjusted to avoid cutoff
+        .attr("x", -70) // Adjusted to avoid cutoff
         .attr("y", -35) // Positioned slightly above the axis
         .attr("fill", "#000")
         .attr("text-anchor", "start")
@@ -147,7 +147,7 @@ function createScene2(data) {
     const legendWidth = 60; // Legend width
     const legendHeight = height / 1.5; // Height of the legend
     const legend = d3.select("#legend").append("svg")
-        .attr("width", legendWidth + 100) // Increased width to accommodate label
+        .attr("width", legendWidth + 150) // Increased width to accommodate label
         .attr("height", legendHeight);
 
 
