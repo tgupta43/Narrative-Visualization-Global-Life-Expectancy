@@ -6,7 +6,7 @@
     <title>GDP vs Life Expectancy Scatter Plot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
-    <script src="https://unpkg.com/d3-annotation@3.0.2/dist/d3-annotation.min.js"></script>
+    <script src="https://unpkg.com/d3-annotation@3.0.2/dist/d3-annotation.min.js"></script> <!-- Updated d3-annotation script -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,6 +18,7 @@
             justify-content: center;
             position: relative;
         }
+        /* Container for the visualization */
         #visualization {
             width: 60vw;
             height: 60vh;
@@ -25,12 +26,24 @@
             flex-direction: column; /* Stack title and scatterplot vertically */
             align-items: center;
             position: relative;
-            padding-top: 40px; /* Add padding to create space for the title */
+            padding-top: 40px; /* Add padding for the title */
         }
-        svg {
+        /* Title styling */
+        #title {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+        /* Ensure the scatter plot SVG does not overflow */
+        #visualization svg {
             width: 100%;
             height: calc(100% - 40px); /* Subtract the space for the title */
         }
+        /* Tooltip styles */
         #tooltip {
             position: absolute;
             background-color: white;
@@ -42,10 +55,11 @@
             border-radius: 4px;
             z-index: 10;
         }
+        /* Navigation buttons styles */
         #navigation {
             position: absolute;
             bottom: 20px;
-            width: 60vw;
+            width: 60vw; /* Adjust width to match the visualization container */
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
@@ -62,31 +76,23 @@
         #navigation button:hover {
             background-color: #0056b3;
         }
+        /* Legend styles */
         #legend {
             position: absolute;
-            top: 20px;
+            top: 60px; /* Positioned below the title */
             left: 2px;
-            width: 120px;
-            height: 350px;
+            width: 120px; /* Ensure this is enough for the legend */
+            height: calc(100% - 60px); /* Adjust height to fit the container */
             padding-right: 20px;
             padding-bottom: 20px;
         }
+        /* Annotation styles */
         #annotations {
             position: absolute;
             top: 20px;
-            right: 20px;
-            width: 300px;
-            height: 60vh;
-        }
-        #title {
-            position: absolute;
-            top: 10px; /* Space from the top of the container */
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 5; /* Ensure it appears above other elements */
+            right: 20px; /* Position annotations on the right side */
+            width: 300px; /* Adjust width as needed */
+            height: 60vh; /* Adjust height to fit the visualization */
         }
     </style>
 </head>
@@ -103,6 +109,7 @@
         <button id="prev-btn" onclick="location.href='scene1.html'">Scene 1</button>
         <button id="next-btn" onclick="location.href='scene3.html'">Scene 3</button>
     </div>
+    <!-- Tooltip Element -->
     <div id="tooltip"></div>
     <script src="js/scene2.js"></script>
 </body>
