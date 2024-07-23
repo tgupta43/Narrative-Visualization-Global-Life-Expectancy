@@ -113,14 +113,14 @@ function createScene2(data) {
         .attr("y", 40)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
-        .text("GDP (current US$, log scale)");
+        .text("GDP (current US$)");
 
     svg.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
         .attr("x", -60) // Adjusted to avoid cutoff
-        .attr("y", -30) // Positioned slightly above the axis
+        .attr("y", -35) // Positioned slightly above the axis
         .attr("fill", "#000")
         .attr("text-anchor", "start")
         .text("Life Expectancy (years)"); // Updated label text
@@ -129,7 +129,7 @@ function createScene2(data) {
     const legendWidth = 60; // Legend width
     const legendHeight = height / 1.5; // Height of the legend
     const legend = d3.select("#legend").append("svg")
-        .attr("width", legendWidth)
+        .attr("width", legendWidth + 80) // Increased width to accommodate label
         .attr("height", legendHeight);
 
     // Define the scale for the legend
@@ -176,7 +176,7 @@ function createScene2(data) {
 
     // Add the label to the right of the legend
     legend.append("text")
-        .attr("x", legendWidth + 70) // Positioned to the right of the legend
+        .attr("x", legendWidth + 10) // Positioned to the right of the legend
         .attr("y", legendHeight / 2)
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
