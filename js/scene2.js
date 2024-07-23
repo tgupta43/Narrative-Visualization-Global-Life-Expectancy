@@ -1,5 +1,3 @@
-// Scene 2 JavaScript
-
 // Function to create the scatter plot visualization
 function createScene2(data) {
     console.log("Data for Scene 2:", data); // Add a log to verify data
@@ -116,68 +114,53 @@ function createScene2(data) {
         .attr("text-anchor", "end")
         .text("Life Expectancy at Birth (years)");
 
-    // Add legend for life expectancy
-const legendWidth = 120; // Increased width of legend
-const legendHeight = height / 1.5; // Set height of legend
-const legend = d3.select("#legend").append("svg")
-    .attr("width", legendWidth + 40) // Increased width for ticks and labels
-    .attr("height", legendHeight)
-    .attr("x", margin.left - legendWidth - 20); // Position legend closer to scatter plot
+    // Create the legend
+    const legendWidth = 60; // Legend width
+    const legendHeight = height / 1.5; // Height of the legend
+    const legend = d3.select("#legend").append("svg")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight);
 
-const legendScale = d3.scaleLinear()
-    .domain([minLifeExpectancy, maxLifeExpectancy])
-    .range([legendHeight, 0]);
+    const legendScale = d3.scaleLinear()
+        .domain([minLifeExpectancy, maxLifeExpectancy])
+        .range([legendHeight, 0]);
 
-const legendAxis = d3.axisRight(legendScale)
-    .ticks(10)
-    .tickSize(5)
-    .tickFormat(d3.format(".0f")); // Format tick labels
+    const legendAxis = d3.axisRight(legendScale)
+        .ticks(10)
+        .tickSize(5);
 
-legend.append("g")
-    .attr("transform", `translate(${legendWidth - 20}, 0)`)
-    .call(legendAxis);
+    legend.append("g")
+        .attr("transform", `translate(${legendWidth - 10}, 0)`)
+        .call(legendAxis);
 
-// Create color blocks for the legend
-const numBlocks = 10;
-const blockHeight = legendHeight / numBlocks;
-const blockData = d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks);
+    // Create color blocks for the legend
+    const numBlocks = 10;
+    const blockHeight = legendHeight / numBlocks;
+    const blockData = d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks);
 
-legend.selectAll("rect")
-    .data(blockData)
-    .enter().append("rect")
-    .attr("x", 0)
-    .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
-    .attr("width", legendWidth - 20) // Adjust width of blocks
-    .attr("height", blockHeight)
-    .style("fill", d => colorScale(d));
+    legend.selectAll("rect")
+        .data(blockData)
+        .enter().append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
+        .attr("width", legendWidth - 5)
+        .attr("height", blockHeight)
+        .style("fill", d => colorScale(d));
 
-// Add labels for each color block
-legend.selectAll("text.legend-label")
-    .data(blockData)
-    .enter().append("text")
-    .attr("x", legendWidth - 10) // Position text next to the blocks
-    .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight + blockHeight / 2)
-    .attr("dy", "0.35em") // Vertical alignment
-    .attr("text-anchor", "start")
-    .attr("font-size", "10px")
-    .text(d => d3.format(".0f")(d));
+    // Add max and min labels to the legend
+    legend.append("text")
+        .attr("x", legendWidth + 5)
+        .attr("y", 20)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
 
-// Add max and min labels to the legend
-legend.append("text")
-    .attr("x", legendWidth + 10)
-    .attr("y", 20)
-    .attr("text-anchor", "start")
-    .attr("font-size", "12px")
-    .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
-
-legend.append("text")
-    .attr("x", legendWidth + 10)
-    .attr("y", legendHeight - 10)
-    .attr("text-anchor", "start")
-    .attr("font-size", "12px")
-    .text("Min: " + d3.format(".0f")(minLifeExpectancy));
-
-
+    legend.append("text")
+        .attr("x", legendWidth + 5)
+        .attr("y", legendHeight - 5)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Min: " + d3.format(".0f")(minLifeExpectancy));
 }
 
 // Load data and initialize the visualization
