@@ -137,7 +137,7 @@ function createScene2(data) {
         .call(d3.axisLeft(yScale))
         .append("text")
         .attr("x", -margin.left / 2) // Adjusted to avoid cutoff
-        .attr("y", -40) // Positioned slightly above the axis
+        .attr("y", -20) // Positioned slightly above the axis
         .attr("fill", "#000")
         .attr("text-anchor", "middle")
         .attr("font-size", "14px")
