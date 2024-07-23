@@ -232,7 +232,7 @@ const annotations = [
             title: "Shows how Economic status affects how long a person can live."
         },
         x: 60,  // Fixed x position within #annotations
-        y: 250,   // Fixed y position within #annotations
+        y: 300,   // Fixed y position within #annotations
         dy: 10,
         dx: 10
     }
