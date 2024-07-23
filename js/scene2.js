@@ -6,7 +6,7 @@ function createScene2(data) {
 
     const width = 800; // Adjusted width for smaller scatterplot
     const height = 500; // Adjusted height for smaller scatterplot
-    const margin = { top: 20, right: 100, bottom: 50, left: 80 }; // Adjusted margins
+    const margin = { top: 20, right: 100, bottom: 50, left: 100 }; // Adjusted margins
 
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
@@ -101,7 +101,7 @@ function createScene2(data) {
         .call(d3.axisBottom(xTransformedScale).tickFormat(d3.format(".0s")).ticks(5))
         .append("text")
         .attr("x", width - margin.right)
-        .attr("y", 30)
+        .attr("y", 40)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
         .text("GDP (current US$)");
@@ -110,18 +110,19 @@ function createScene2(data) {
         .attr("transform", `translate(${margin.left}, 0)`)
         .call(d3.axisLeft(yScale))
         .append("text")
-        .attr("x", -30)
+        .attr("x", -50) // Adjusted to avoid cutoff
         .attr("y", 10)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
         .text("Life Expectancy at Birth (years)");
 
     // Add legend for life expectancy
-    const legendWidth = 60; // Set width of legend
+    const legendWidth = 80; // Adjusted width of legend
     const legendHeight = height / 1.5; // Set height of legend
     const legend = d3.select("#legend").append("svg")
         .attr("width", legendWidth)
-        .attr("height", legendHeight);
+        .attr("height", legendHeight)
+        .attr("x", margin.left - legendWidth - 20); // Position legend closer to scatter plot
 
     const legendScale = d3.scaleLinear()
         .domain([minLifeExpectancy, maxLifeExpectancy])
@@ -149,18 +150,18 @@ function createScene2(data) {
 
     // Add max and min labels to the legend
     legend.append("text")
-        .attr("x", legendWidth + 5)
+        .attr("x", legendWidth + 10)
         .attr("y", 20)
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
-        .text("Max: " + maxLifeExpectancy);
+        .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
 
     legend.append("text")
-        .attr("x", legendWidth + 5)
+        .attr("x", legendWidth + 10)
         .attr("y", legendHeight - 5)
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
-        .text("Min: " + minLifeExpectancy);
+        .text("Min: " + d3.format(".0f")(minLifeExpectancy));
 }
 
 // Load data and initialize the visualization

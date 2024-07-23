@@ -3,54 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scene 2 - Scatterplot</title>
+    <title>GDP vs Life Expectancy Scatter Plot</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="js/scene2.js" defer></script>
+    <script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+    <script src="js/d3-annotation.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            overflow: hidden; /* Prevents scrollbars from appearing if SVG is too large */
-        }
-        #container {
-            display: flex;
-            justify-content: center; /* Centers the scatterplot horizontally */
-            align-items: center; /* Centers the scatterplot vertically */
             height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             position: relative;
         }
         #visualization {
-            width: 60%;
-            height: 100%;
-            position: relative; /* Ensures the scatterplot is positioned correctly within its container */
+            width: 60vw; /* Adjusted width to fit */
+            height: 60vh; /* Adjusted height to fit */
+            display: flex; /* Enable flexbox layout */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            position: relative;
         }
-        #legend {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 20%; /* Adjust width as needed */
+        svg {
+            width: 100%; /* Scale the SVG to fit the container */
+            height: 100%; /* Scale the SVG to fit the container */
         }
-        .tooltip {
+        /* Tooltip styles */
+        #tooltip {
             position: absolute;
-            text-align: center;
+            background-color: white;
+            border: 1px solid #ccc;
             padding: 5px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 3px;
-            pointer-events: none;
             display: none;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            z-index: 10;
         }
-        .navigation-buttons {
+        /* Navigation buttons styles */
+        #navigation {
             position: absolute;
             bottom: 20px;
-            width: calc(100% - 40px); /* Adjust width to fit the container */
+            width: 60vw; /* Adjust width to match the visualization container */
             display: flex;
             justify-content: space-between;
             padding: 0 20px;
         }
-        .navigation-buttons button {
+        #navigation button {
             font-size: 16px;
             padding: 10px 20px;
             border: none;
@@ -59,20 +60,30 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        .navigation-buttons button:hover {
+        #navigation button:hover {
             background-color: #0056b3;
+        }
+        /* Legend styles */
+        #legend {
+            position: absolute;
+            top: 20px;
+            left: 10px; /* Move legend closer to scatterplot */
+            width: 80px; /* Adjust width as needed */
+            height: 300px; /* Adjust height as needed */
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <div id="visualization"></div>
+    <div id="visualization">
+        <!-- The SVG for the scatter plot will be appended here by the script -->
         <div id="legend"></div>
     </div>
-    <div class="tooltip" id="tooltip"></div>
-    <div class="navigation-buttons">
-        <button onclick="window.location.href='scene1.html'">Previous</button>
-        <button onclick="window.location.href='scene3.html'">Next</button>
+    <div id="navigation">
+        <button id="prev-btn" onclick="location.href='scene1.html'">Previous</button>
+        <button id="next-btn" onclick="location.href='scene3.html'">Next</button>
     </div>
+    <!-- Tooltip Element -->
+    <div id="tooltip"></div>
+    <script src="js/scene2.js"></script>
 </body>
 </html>
