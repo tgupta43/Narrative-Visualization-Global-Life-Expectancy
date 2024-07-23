@@ -143,28 +143,7 @@ function createScene2(data) {
         .attr("font-size", "14px")
         .text("Life Expectancy (years)");
     
-        // Annotations
-        const annotations = [
-            {
-                note: { label: "North America and Europe have higher life expectancies than the other continents. What can be the reason for this? Click next to explore.", title: "Notable Differences Between Continents" },
-                x: 50, y: 100, dy: 37, dx: 62
-            }
-        ];
-
-        const makeAnnotations = d3.annotation()
-            .type(d3.annotationLabel)
-            .annotations(annotations);
-
-        d3.select("#annotations")
-            .append("svg")
-            .attr("width", 200)
-            .attr("height", 500)
-            .call(makeAnnotations)
-            .selectAll(".annotation-connector") // Remove connector lines
-            .style("display", "none")
-            .selectAll(".annotation-note")
-            .style("stroke", "none") // Ensure no stroke
-            .style("fill", "none"); // Ensure no fill
+        
 
     // Create the legend
     const legendWidth = 60; // Legend width
