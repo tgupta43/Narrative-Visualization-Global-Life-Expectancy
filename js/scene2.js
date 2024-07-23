@@ -4,7 +4,7 @@ function createScene2(data) {
 
     const width = 800; // Adjusted width for smaller scatterplot
     const height = 500; // Adjusted height for smaller scatterplot
-    const margin = { top: 20, right: 140, bottom: 50, left: 120 }; // Increased right margin for legend
+    const margin = { top: 20, right: 160, bottom: 50, left: 120 }; // Increased right margin for legend
 
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
@@ -113,7 +113,7 @@ function createScene2(data) {
         .attr("y", 40)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
-        .text("GDP (current US$)");
+        .text("GDP (current US$, log scale)");
 
     svg.append("g")
         .attr("transform", `translate(${margin.left}, 0)`)
@@ -173,6 +173,14 @@ function createScene2(data) {
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
         .text("Min: " + d3.format(".0f")(minLifeExpectancy));
+
+    // Add the label to the right of the legend
+    legend.append("text")
+        .attr("x", legendWidth + 70) // Positioned to the right of the legend
+        .attr("y", legendHeight / 2)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Life Expectancy (years)"); // Label for legend
 }
 
 // Load data and initialize the visualization
