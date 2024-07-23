@@ -6,7 +6,7 @@ function createScene2(data) {
 
     const width = 800; // Adjusted width for smaller scatterplot
     const height = 500; // Adjusted height for smaller scatterplot
-    const margin = { top: 20, right: 100, bottom: 50, left: 100 }; // Adjusted margins
+    const margin = { top: 20, right: 120, bottom: 50, left: 120 }; // Increased right and left margins
 
     const svg = d3.select("#visualization").append("svg")
         .attr("width", width)
@@ -120,9 +120,9 @@ function createScene2(data) {
     const legendWidth = 80; // Adjusted width of legend
     const legendHeight = height / 1.5; // Set height of legend
     const legend = d3.select("#legend").append("svg")
-        .attr("width", legendWidth)
+        .attr("width", legendWidth + 20) // Increased width for ticks
         .attr("height", legendHeight)
-        .attr("x", margin.left - legendWidth - 20); // Position legend closer to scatter plot
+        .attr("x", margin.left - legendWidth - 40); // Position legend closer to scatter plot
 
     const legendScale = d3.scaleLinear()
         .domain([minLifeExpectancy, maxLifeExpectancy])
