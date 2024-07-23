@@ -146,60 +146,69 @@ function createScene2(data) {
 
 
     // Create the legend
-const legendWidth = 60; // Legend width
-const legendHeight = height / 1.5; // Height of the legend
-const legendMargin = 20; // Margin for space between legend blocks and label
+    const legendWidth = 60; // Legend width
+    const legendHeight = height / 1.5; // Height of the legend
+    const legend = d3.select("#legend").append("svg")
+        .attr("width", legendWidth + 200) // Increased width to accommodate label
+        .attr("height", legendHeight);
 
-const legend = d3.select("#legend").append("svg")
-    .attr("width", legendWidth + 200) // Increased width to accommodate label
-    .attr("height", legendHeight);
 
-// Define the scale for the legend
-const legendScale = d3.scaleLinear()
-    .domain([minLifeExpectancy, maxLifeExpectancy])
-    .range([legendHeight, 0]);
+    // Define the scale for the legend
+    const legendScale = d3.scaleLinear()
+        .domain([minLifeExpectancy, maxLifeExpectancy])
+        .range([legendHeight, 0]);
 
-const legendAxis = d3.axisRight(legendScale)
-    .ticks(10)
-    .tickSize(5);
 
-// Add color blocks to the legend
-const numBlocks = 10;
-const blockHeight = (legendHeight - legendMargin) / numBlocks; // Adjust height to account for margin
-const blockData = d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks);
+    const legendAxis = d3.axisRight(legendScale)
+        .ticks(10)
+        .tickSize(5);
 
-legend.selectAll("rect")
-    .data(blockData)
-    .enter().append("rect")
-    .attr("x", 0)
-    .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight - legendMargin) // Adjusted to add margin
-    .attr("width", legendWidth - 5)
-    .attr("height", blockHeight)
-    .style("fill", d => colorScale(d));
 
-// Add max and min labels to the legend with adjusted positioning
-legend.append("text")
-    .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
-    .attr("y", 20)
-    .attr("text-anchor", "start")
-    .attr("font-size", "12px")
-    .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
+    legend.append("g")
+        .attr("transform", `translate(${legendWidth - 10}, 0)`)
+        .call(legendAxis);
 
-legend.append("text")
-    .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
-    .attr("y", legendHeight - legendMargin + 20) // Adjusted y-position to avoid overlap
-    .attr("text-anchor", "start")
-    .attr("font-size", "12px")
-    .text("Min: " + d3.format(".0f")(minLifeExpectancy));
 
-// Add the label to the right of the legend
-legend.append("text")
-    .attr("x", legendWidth - 25) // Positioned to the right of the legend
-    .attr("y", legendHeight / 2)
-    .attr("text-anchor", "start")
-    .attr("font-size", "12px")
-    .text("Life Expectancy (years)");
+    // Create color blocks for the legend
+    const numBlocks = 10;
+    const blockHeight = legendHeight / numBlocks;
+    const blockData = d3.range(minLifeExpectancy, maxLifeExpectancy, (maxLifeExpectancy - minLifeExpectancy) / numBlocks);
 
+
+    legend.selectAll("rect")
+        .data(blockData)
+        .enter().append("rect")
+        .attr("x", 0)
+        .attr("y", (d, i) => legendHeight - (i + 1) * blockHeight)
+        .attr("width", legendWidth - 5)
+        .attr("height", blockHeight)
+        .style("fill", d => colorScale(d));
+
+
+    // Add max and min labels to the legend with adjusted positioning
+    legend.append("text")
+        .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
+        .attr("y", 20)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Max: " + d3.format(".0f")(maxLifeExpectancy));
+
+
+    legend.append("text")
+        .attr("x", legendWidth + 10) // Increase x-position to avoid cutoff
+        .attr("y", legendHeight - 5)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Min: " + d3.format(".0f")(minLifeExpectancy));
+
+
+    // Add the label to the right of the legend
+    legend.append("text")
+        .attr("x", legendWidth - 25) // Positioned to the right of the legend
+        .attr("y", legendHeight / 2)
+        .attr("text-anchor", "start")
+        .attr("font-size", "12px")
+        .text("Life Expectancy (years)"); // Label for legend
 }
 
 
