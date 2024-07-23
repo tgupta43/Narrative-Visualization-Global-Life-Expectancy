@@ -220,7 +220,7 @@ const annotations = [
             align: "left",
             title: "Annotation Title"
         },
-        x: 70,  // Fixed x position within #annotations
+        x: 60,  // Fixed x position within #annotations
         y: 50,   // Fixed y position within #annotations
         dy: 10,
         dx: 10
