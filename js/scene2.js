@@ -23,11 +23,18 @@ function createScene2(data) {
     console.log("Country Data Map:", countryDataMap); // Log to verify calculations
 
     const values = [...countryDataMap.entries()].map(([countryName, { averageLifeExpectancy, averageGDP }]) => ({ countryName, averageLifeExpectancy, averageGDP }));
-    const minLifeExpectancy = d3.min(values, d => d.averageLifeExpectancy);
+
+    // Find Chad's average life expectancy
+    const chadData = values.find(d => d.countryName === "Chad");
+    const chadLifeExpectancy = chadData ? chadData.averageLifeExpectancy : 0;
+    
+    // Define the range for the legend and color scale
+    const minLifeExpectancy = Math.max(chadLifeExpectancy, d3.min(values, d => d.averageLifeExpectancy));
     const maxLifeExpectancy = d3.max(values, d => d.averageLifeExpectancy);
     const minGDP = d3.min(values, d => d.averageGDP);
     const maxGDP = d3.max(values, d => d.averageGDP);
 
+    console.log("Chad's Life Expectancy:", chadLifeExpectancy);
     console.log("Min Life Expectancy:", minLifeExpectancy);
     console.log("Max Life Expectancy:", maxLifeExpectancy);
     console.log("Min GDP:", minGDP);
@@ -64,7 +71,7 @@ function createScene2(data) {
 
     // Add scatter plot dots
     svg.selectAll("circle")
-        .data(values.filter(d => !isNaN(d.averageGDP))) // Filter out points with NaN GDP
+        .data(values)
         .enter().append("circle")
         .attr("cx", d => {
             const x = xTransformedScale(logTransform(d.averageGDP));
@@ -77,7 +84,7 @@ function createScene2(data) {
             return isNaN(y) ? 0 : y; // Fallback if y is NaN
         })
         .attr("r", 5)
-        .attr("fill", d => d.averageLifeExpectancy > 0 ? colorScale(d.averageLifeExpectancy) : "#000")
+        .attr("fill", d => d.averageLifeExpectancy >= chadLifeExpectancy ? colorScale(d.averageLifeExpectancy) : "#000")
         .on("mouseover", function(event, d) {
             const countryName = d.countryName || "Unknown";
             const gdpFormatted = d.averageGDP !== undefined ? `$${d.averageGDP.toLocaleString()}` : "N/A";
