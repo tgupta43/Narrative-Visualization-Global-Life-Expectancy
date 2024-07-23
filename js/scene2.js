@@ -209,6 +209,30 @@ function createScene2(data) {
         .attr("text-anchor", "start")
         .attr("font-size", "12px")
         .text("Life Expectancy (years)"); // Label for legend
+    
+    // Add annotations without connectors
+    const annotations = [
+        {
+            note: {
+                label: "This is an annotation for the scatter plot.",
+                align: "left"
+            },
+            x: xTransformedScale(logTransform(1000000000)), // Example GDP value
+            y: yScale(70), // Example life expectancy value
+            dy: -50,
+            dx: 50
+        }
+    ];
+
+    const makeAnnotations = d3.annotation()
+        .type(d3.annotationLabel)
+        .annotations(annotations);
+
+    svg.append("g")
+        .attr("class", "annotations")
+        .call(makeAnnotations)
+        .selectAll(".annotation-connector")
+        .style("display", "none"); // Hide connectors
 }
 
 
