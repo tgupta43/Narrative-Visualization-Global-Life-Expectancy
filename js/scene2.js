@@ -227,7 +227,7 @@ const annotations = [
     },
     {
         note: {
-            label: "GDP is based on country, their status, politics, governments, and in turn that affects their own people's life.",
+            label: "GDP is based on country, their status, politics, governments, and in turn that affects their own people's life. Click Final for takeaways.",
             align: "left",
             title: "Shows how Economic status affects how long a person can live."
         },
