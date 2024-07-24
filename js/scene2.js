@@ -19,7 +19,7 @@ function createScene2(data) {
     const countryDataMap = d3.rollup(data, v => {
         const nonZeroLifeExpectancy = v.map(d => +d["Life expectancy at birth, total (years) [SP.DYN.LE00.IN]"]).filter(val => val > 0);
         const averageLifeExpectancy = nonZeroLifeExpectancy.length ? d3.mean(nonZeroLifeExpectancy) : 0;
-        const averageGDP = d3.mean(v.map(d => +d["GDP (current US$) [NY.GDP.MKTP.CD]"]));
+        const averageGDP = d3.mean(v.map(d => +d["Mortality rate, under-5 (per 1,000 live births) [SH.DYN.MORT]"]));
         return { averageLifeExpectancy, averageGDP };
     }, d => d["Country Name"]);
 
@@ -129,7 +129,7 @@ function createScene2(data) {
         .attr("y", 40)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
-        .text("GDP (current US$) log scale");
+        .text("Mortality rate, under 5 (per 1,000 live births)");
 
 
         svg.append("g")
