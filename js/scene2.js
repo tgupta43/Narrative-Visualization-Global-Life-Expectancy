@@ -227,9 +227,9 @@ const annotations = [
     },
     {
         note: {
-            label: "GDP is based on country, their status, politics, governments, and in turn that affects their own people's life. Click Final for takeaways.",
+            label: "Health issues that cause child mortality mean life expectancy averages are lower. This shows some countries have more health issues than others.",
             align: "left",
-            title: "Shows how Economic status affects how long a person can live."
+            title: "Higher child mortality means the average life expectancy goes down."
         },
         x: 60,  // Fixed x position within #annotations
         y: 300,   // Fixed y position within #annotations
