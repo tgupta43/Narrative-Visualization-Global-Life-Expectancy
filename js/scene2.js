@@ -216,9 +216,9 @@ function createScene2(data) {
 const annotations = [
     {
         note: {
-            label: "The scatterplot shows us that higher GDP usually translates to higher life expectancy.  ",
+            label: "This concludes that countries known for more health issues will have lower life expectancy overall. ",
             align: "left",
-            title: "Higher GDP does show higher life expectancy."
+            title: "Higher Child Mortality shows lower life expectancy."
         },
         x: 60,  // Fixed x position within #annotations
         y: 50,   // Fixed y position within #annotations
