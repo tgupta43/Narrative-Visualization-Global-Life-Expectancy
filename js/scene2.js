@@ -129,7 +129,7 @@ function createScene2(data) {
         .attr("y", 40)
         .attr("fill", "#000")
         .attr("text-anchor", "end")
-        .text("Mortality rate, under 5 (per 1,000 live births)");
+        .text("Mortality rate, under 5 (per 1,000 live births) (log scale)");
 
 
         svg.append("g")
