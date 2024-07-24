@@ -98,7 +98,7 @@ function createScene1(data) {
         d3.select("#annotations")
             .append("svg")
             .attr("width", 200)
-            .attr("height", 500)
+            .attr("height", 550)
             .call(makeAnnotations)
             .selectAll(".annotation-connector") // Remove connector lines
             .style("display", "none")
