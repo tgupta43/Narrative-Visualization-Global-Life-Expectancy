@@ -227,7 +227,7 @@ const annotations = [
     },
     {
         note: {
-            label: "Health issues that cause child mortality mean life expectancy averages are lower. This shows some countries have more health issues than others.",
+            label: "Health issues that cause child mortality mean life expectancy averages are lower. This shows some countries have more health issues than others. Click Scene 3.",
             align: "left",
             title: "Higher child mortality means the average life expectancy goes down."
         },
