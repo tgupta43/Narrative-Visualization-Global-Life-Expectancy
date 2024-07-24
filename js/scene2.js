@@ -1,4 +1,5 @@
 // Function to create the scatter plot visualization
+//add
 function createScene2(data) {
     console.log("Data for Scene 2:", data); // Add a log to verify data
 
