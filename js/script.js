@@ -86,7 +86,7 @@ function createScene1(data) {
         // Annotations
         const annotations = [
             {
-                note: { label: "North America and Europe have higher life expectancies than other continents. Notice, Africa's countries have some of the lowest life expectancies. What causes this? Click Scene 2 to explore.", title: "Notable Differences Between Continents" },
+                note: { label: "North America and Europe have higher life expectancies than other continents. Chad has the lowest life expectancy while Japan has the highest. Notice, Africa's countries have some of the lowest life expectancies. What causes this? Click Scene 2 to explore.", title: "Notable Differences Between Continents" },
                 x: 50, y: 100, dy: 50, dx: 70
             }
         ];
@@ -98,7 +98,7 @@ function createScene1(data) {
         d3.select("#annotations")
             .append("svg")
             .attr("width", 200)
-            .attr("height", 550)
+            .attr("height", 700)
             .call(makeAnnotations)
             .selectAll(".annotation-connector") // Remove connector lines
             .style("display", "none")
